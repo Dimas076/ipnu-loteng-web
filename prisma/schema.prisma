@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("Admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Berita {
+  id        Int      @id @default(autoincrement())
+  title     String
+  slug      String   @unique
+  excerpt   String?
+  content   String
+  image     String?
+  category  String   @default("Umum")
+  status    String   @default("draft")
+  authorId  Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Galeri {
+  id        Int      @id @default(autoincrement())
+  title     String
+  image     String
+  category  String   @default("Umum")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Agenda {
+  id                  Int      @id @default(autoincrement())
+  title               String
+  description         String?
+  category            String   @default("Semua")
+  date                DateTime
+  endDate             DateTime?
+  location            String?
+  map_link            String?
+  latitude            Float?
+  longitude           Float?
+  image               String?
+  whatsapp_group_link String?
+  status              String   @default("upcoming")
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  peserta             Peserta[]
+}
+
+model Peserta {
+  id                Int      @id @default(autoincrement())
+  agendaId          Int
+  agenda            Agenda   @relation(fields: [agendaId], references: [id], onDelete: Cascade)
+  nama_lengkap      String
+  asal_pimpinan     String?
+  nomor_hp          String
+  status_sertifikat String   @default("pending") // pending, approved
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Profile {
+  id            Int      @id @default(1)
+  sejarah_text  String?
+  sejarah_image String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Pilar {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Pengurus {
+  id        Int      @id @default(autoincrement())
+  nama      String
+  jabatan   String
+  tier      Int      @default(3)
+  foto      String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
