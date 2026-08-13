@@ -26,13 +26,6 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!supabaseKey) {
-       return NextResponse.json(
-        { error: 'Supabase credentials are not configured.' },
-        { status: 500 }
-      );
-    }
-
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
