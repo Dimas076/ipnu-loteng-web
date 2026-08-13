@@ -1,11 +1,18 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://awgndfmjxevvjsjhmydj.supabase.co';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
-
-const supabase = createClient(supabaseUrl, supabaseKey as string);
+// We don't initialize createClient at the top level to prevent Next.js build errors 
+// if environment variables are not available during the build phase.
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://awgndfmjxevvjsjhmydj.supabase.co';
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
+  
+  if (!supabaseKey) {
+    throw new Error('Supabase credentials are not configured.');
+  }
+  
+  return createClient(supabaseUrl, supabaseKey as string);
+}
 
 export async function POST(request: Request) {
   try {
@@ -33,6 +40,8 @@ export async function POST(request: Request) {
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
     const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, '');
     const filename = `${uniqueSuffix}-${originalName}`;
+    
+    const supabase = getSupabaseClient();
     
     // Upload file to Supabase Storage
     const { data, error } = await supabase
