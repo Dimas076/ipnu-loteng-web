@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
+import { createClient } from '@supabase/supabase-js';
+
+// Initialize Supabase client
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://awgndfmjxevvjsjhmydj.supabase.co';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
+
+const supabase = createClient(supabaseUrl, supabaseKey as string);
 
 export async function POST(request: Request) {
   try {
@@ -14,6 +19,13 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!supabaseKey) {
+       return NextResponse.json(
+        { error: 'Supabase credentials are not configured.' },
+        { status: 500 }
+      );
+    }
+
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
@@ -22,24 +34,32 @@ export async function POST(request: Request) {
     const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, '');
     const filename = `${uniqueSuffix}-${originalName}`;
     
-    // Save to public/uploads
-    const uploadDir = join(process.cwd(), 'public', 'uploads');
-    
-    // Ensure directory exists
-    try {
-      await mkdir(uploadDir, { recursive: true });
-    } catch (err) {
-      console.error('Error creating upload directory:', err);
+    // Upload file to Supabase Storage
+    const { data, error } = await supabase
+      .storage
+      .from('uploads')
+      .upload(filename, buffer, {
+        contentType: file.type,
+        upsert: false
+      });
+
+    if (error) {
+      console.error('Supabase Storage Error:', error);
+      return NextResponse.json(
+        { error: 'Gagal mengunggah file ke server penyimpanan.' },
+        { status: 500 }
+      );
     }
 
-    const filepath = join(uploadDir, filename);
-    await writeFile(filepath, buffer);
-
-    const fileUrl = `/uploads/${filename}`;
+    // Get public URL
+    const { data: { publicUrl } } = supabase
+      .storage
+      .from('uploads')
+      .getPublicUrl(filename);
 
     return NextResponse.json({ 
       success: true, 
-      url: fileUrl,
+      url: publicUrl,
       message: 'File uploaded successfully'
     });
 

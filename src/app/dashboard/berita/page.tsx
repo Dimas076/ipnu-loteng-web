@@ -154,9 +154,11 @@ export default function BeritaPage() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-70 group-hover:opacity-100 transition-opacity">
-                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-on-surface-variant hover:text-primary hover:bg-[#EEF7F2]">
-                          <Edit className="h-4 w-4" />
-                        </Button>
+                        <Link href={`/dashboard/berita/edit/${post.id}`}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-on-surface-variant hover:text-primary hover:bg-[#EEF7F2]">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </Link>
                         <Button 
                           variant="ghost" 
                           size="icon" 
