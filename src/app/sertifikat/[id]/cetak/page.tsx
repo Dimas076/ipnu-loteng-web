@@ -29,7 +29,6 @@ export default async function CetakSertifikat({ params }: { params: Promise<{ id
         <div className="flex gap-3">
           <Button 
             className="bg-primary text-white font-bold px-6"
-            onClick="window.print()" // We'll add a client component wrapper for this if needed, but simple onclick on native button works? Actually onClick is for React, so we'll just use a small inline script or tell user to press Ctrl+P
           >
             <Printer className="w-4 h-4 mr-2" />
             Cetak / Simpan PDF
