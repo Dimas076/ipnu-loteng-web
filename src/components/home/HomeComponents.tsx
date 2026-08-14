@@ -285,7 +285,7 @@ export function KabarTerbaru({ berita }: { berita: BeritaItem[] }) {
                     <img
                       src={item.image}
                       alt={item.title}
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-[cubic-bezier(0.2,0,0,1)]"
+                      className="w-full h-full object-cover"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-muted">
@@ -366,8 +366,8 @@ export function GaleriSection({ photos }: { photos: GaleriItem[] }) {
                 alt={photo.title}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
-                <h4 className="font-semibold text-white text-base transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">{photo.title}</h4>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent flex flex-col justify-end p-5">
+                <h4 className="font-semibold text-white text-base">{photo.title}</h4>
               </div>
             </motion.div>
           ))}

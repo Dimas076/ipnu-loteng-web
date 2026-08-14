@@ -1,7 +1,6 @@
 "use client";
 
-import { use } from "react";
-import { notFound } from "next/navigation";
+import { useParams, notFound } from "next/navigation";
 import { MainLayout } from "@/components/layouts/MainLayout";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -88,9 +87,12 @@ const programData: Record<string, any> = {
   }
 };
 
-export default function ProgramPage(props: { params: Promise<{ slug: string }> }) {
-  const { slug } = use(props.params);
+export default function ProgramPage() {
+  const params = useParams();
+  const slug = params?.slug as string;
   
+  if (!slug) return null;
+
   const data = programData[slug];
   
   if (!data) {

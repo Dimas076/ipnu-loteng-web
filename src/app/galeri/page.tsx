@@ -117,11 +117,9 @@ export default function GaleriPage() {
                     <img
                       src={item.image}
                       alt={item.title}
-                      className="w-full h-full object-cover transition-transform duration-500"
+                      className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent
-                                    md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300
-                                    flex flex-col justify-end p-3 md:p-5">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent flex flex-col justify-end p-3 md:p-5">
                       <span className="text-[10px] md:text-xs font-semibold text-white/70 mb-0.5 uppercase tracking-wider">
                         {item.category}
                       </span>

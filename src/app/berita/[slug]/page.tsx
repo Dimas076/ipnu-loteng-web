@@ -122,7 +122,7 @@ export default async function BeritaDetailPage({ params }: { params: Promise<{ s
                     <div className="w-24 h-20 rounded-lg bg-muted shrink-0 overflow-hidden relative border border-border">
                       {item.image ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={item.image} alt={item.title} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                        <img src={item.image} alt={item.title} className="w-full h-full object-cover " />
                       ) : (
                         <ImageIcon className="absolute inset-0 m-auto h-6 w-6 text-muted-foreground/30 transition-transform" />
                       )}

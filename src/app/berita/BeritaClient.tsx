@@ -247,7 +247,7 @@ export function BeritaClient() {
                           <div className="relative w-full aspect-[21/9] rounded-lg overflow-hidden mb-4 bg-muted border border-border/50">
                             {headline.image ? (
                               // eslint-disable-next-line @next/next/no-img-element
-                              <img src={headline.image} alt={headline.title} className="w-full h-full object-cover transition-transform duration-500" />
+                              <img src={headline.image} alt={headline.title} className="w-full h-full object-cover " />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/15 to-primary/5">
                                 <ImageIcon className="h-12 w-12 text-muted-foreground/30" />
@@ -275,7 +275,7 @@ export function BeritaClient() {
                               <div className="w-32 h-24 md:w-full md:h-auto md:aspect-[16/9] rounded-lg bg-muted shrink-0 overflow-hidden relative md:mb-3">
                                 {news.image ? (
                                   // eslint-disable-next-line @next/next/no-img-element
-                                  <img src={news.image} alt={news.title} className="w-full h-full object-cover transition-transform duration-500" />
+                                  <img src={news.image} alt={news.title} className="w-full h-full object-cover " />
                                 ) : (
                                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
                                     <ImageIcon className="h-6 w-6 md:h-8 md:w-8 text-muted-foreground/30" />
@@ -313,7 +313,7 @@ export function BeritaClient() {
                             <div className="w-28 h-28 md:w-48 md:h-32 rounded-lg bg-muted shrink-0 overflow-hidden relative border border-border/50">
                               {news.image ? (
                                 // eslint-disable-next-line @next/next/no-img-element
-                                <img src={news.image} alt={news.title} className="w-full h-full object-cover transition-transform duration-500" />
+                                <img src={news.image} alt={news.title} className="w-full h-full object-cover " />
                               ) : (
                                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
                                   <ImageIcon className="h-8 w-8 text-muted-foreground/30" />
