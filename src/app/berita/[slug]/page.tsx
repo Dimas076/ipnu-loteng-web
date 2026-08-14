@@ -152,8 +152,8 @@ export default async function BeritaDetailPage({ params }: { params: Promise<{ s
              
              <h3 className="text-xl font-bold mb-2">Grup WhatsApp IPNU Loteng</h3>
              <p className="text-primary-foreground/80 text-sm mb-6">Bergabunglah dengan channel WhatsApp kami untuk mendapatkan informasi terkini secara langsung.</p>
-             <Button variant="secondary" className="w-full rounded-lg font-bold relative z-10 transition-transform h-12" asChild>
-               <a href="https://chat.whatsapp.com/" target="_blank" rel="noopener noreferrer">Gabung Channel WA</a>
+             <Button className="w-full rounded-lg font-bold relative z-10 transition-transform h-12 bg-[#25D366] text-white hover:bg-[#20bd5a]" asChild>
+               <a href="https://whatsapp.com/channel/0029Vauxr2e6WaKevYRY1m3b" target="_blank" rel="noopener noreferrer">Gabung Channel WA</a>
              </Button>
           </div>
 
