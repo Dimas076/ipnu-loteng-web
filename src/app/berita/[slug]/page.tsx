@@ -1,10 +1,11 @@
 import { MainLayout } from "@/components/layouts/MainLayout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, User, Share2, ArrowLeft, Image as ImageIcon, TrendingUp, Tag, Newspaper } from "lucide-react";
+import { Calendar, User, ArrowLeft, Image as ImageIcon, TrendingUp, Tag, Newspaper } from "lucide-react";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import { ShareButton } from "@/components/ui/ShareButton";
 
 export const revalidate = 60; // ISR 60 seconds
 
@@ -68,9 +69,7 @@ export default async function BeritaDetailPage({ params }: { params: Promise<{ s
               <span>{formatDate(berita.createdAt)}</span>
             </div>
             <div className="ml-auto">
-              <Button variant="outline" size="sm" className="h-8 gap-2">
-                <Share2 className="h-3 w-3" /> Bagikan
-              </Button>
+              <ShareButton title={berita.title} />
             </div>
           </div>
         </header>
