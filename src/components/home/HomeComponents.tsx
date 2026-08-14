@@ -345,7 +345,7 @@ export function GaleriSection({ photos }: { photos: GaleriItem[] }) {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-          {display.map((photo, i) => {
+          {display.map((photo) => {
             const images = photo.image.split(',');
             return (
               <motion.div
