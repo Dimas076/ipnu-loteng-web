@@ -25,10 +25,10 @@ export default async function Home() {
       take: 3,
     }),
 
-    // 3. 4 foto galeri terbaru
+    // 3. 3 foto galeri terbaru
     prisma.galeri.findMany({
       orderBy: { createdAt: "desc" },
-      take: 4,
+      take: 3,
     }),
 
     // 4. Statistik nyata dari database

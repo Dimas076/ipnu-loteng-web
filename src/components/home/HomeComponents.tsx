@@ -327,8 +327,8 @@ export function GaleriSection({ photos }: { photos: GaleriItem[] }) {
   // Jika belum ada foto di DB, sembunyikan section ini
   if (photos.length === 0) return null;
 
-  // Ambil maks 4 foto
-  const display = photos.slice(0, 4);
+  // Ambil maks 3 foto
+  const display = photos.slice(0, 3);
 
   return (
     <section className="py-12 md:py-16 bg-background">
@@ -343,7 +343,7 @@ export function GaleriSection({ photos }: { photos: GaleriItem[] }) {
           </Button>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
           {display.map((photo, i) => (
             <motion.div
               key={photo.id}
