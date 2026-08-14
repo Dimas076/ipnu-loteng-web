@@ -8,6 +8,8 @@ export const metadata = {
   description: "Sejarah, Visi Misi, dan Struktur Organisasi PC IPNU Lombok Tengah.",
 };
 
+export const revalidate = 60;
+
 export default async function ProfilPage() {
   const profile = await prisma.profile.findUnique({ where: { id: 1 } });
   const pilars = await prisma.pilar.findMany({ orderBy: { order: 'asc' } });
