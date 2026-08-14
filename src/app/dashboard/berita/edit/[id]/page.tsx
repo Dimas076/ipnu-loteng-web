@@ -20,6 +20,7 @@ export default function EditBeritaPage() {
     title: "",
     content: "",
     image: "",
+    category: "",
     status: "draft",
   });
 
@@ -32,6 +33,7 @@ export default function EditBeritaPage() {
           title: post.title,
           content: post.content,
           image: post.image || "",
+          category: post.category || "",
           status: post.status,
         });
       } catch (err: any) {
@@ -203,6 +205,20 @@ export default function EditBeritaPage() {
                 />
               </div>
               <p className="text-xs text-on-surface-variant font-medium">Klik pada area pratinjau di atas untuk mengunggah gambar.</p>
+            </div>
+
+            <div className="w-full h-px bg-[#E5E7EB] my-2"></div>
+
+            <div className="space-y-3">
+              <label className="text-sm font-bold text-on-surface">Kategori Berita</label>
+              <input 
+                type="text" 
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-outline rounded-lg focus:ring-1 focus:ring-[#0F6D46] focus:border-primary focus:outline-none transition-all text-sm bg-surface-container-lowest font-medium text-on-surface placeholder:text-[#9CA3AF]"
+                placeholder="Misal: Kegiatan, Opini (opsional)"
+              />
             </div>
 
             <div className="w-full h-px bg-[#E5E7EB] my-2"></div>
