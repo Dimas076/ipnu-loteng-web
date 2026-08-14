@@ -4,6 +4,11 @@ import dynamic from 'next/dynamic';
 import { useMemo } from 'react';
 import 'react-quill/dist/quill.snow.css';
 
+const ReactQuill = dynamic(() => import('react-quill'), { 
+  ssr: false,
+  loading: () => <div className="h-[300px] w-full bg-slate-50 animate-pulse rounded-xl border border-slate-200 flex items-center justify-center text-slate-400 font-medium">Memuat Editor Teks...</div>
+});
+
 interface RichTextEditorProps {
   value: string;
   onChange: (value: string) => void;
@@ -11,11 +16,6 @@ interface RichTextEditorProps {
 }
 
 export default function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
-  // Dynamically import ReactQuill to avoid SSR issues (document is not defined)
-  const ReactQuill = useMemo(() => dynamic(() => import('react-quill'), { 
-    ssr: false,
-    loading: () => <div className="h-[300px] w-full bg-slate-50 animate-pulse rounded-xl border border-slate-200 flex items-center justify-center text-slate-400 font-medium">Memuat Editor Teks...</div>
-  }), []);
 
   const modules = {
     toolbar: [
