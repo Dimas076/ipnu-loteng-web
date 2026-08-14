@@ -5,6 +5,7 @@ import { MainLayout } from "@/components/layouts/MainLayout";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Image as ImageIcon, Loader2 } from "lucide-react";
+import { GallerySlideshow } from "@/components/ui/GallerySlideshow";
 
 interface GaleriPhoto {
   id: number;
@@ -108,27 +109,21 @@ export default function GaleriPage() {
             {/* Photo Grid */}
             {filtered.length > 0 ? (
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-                {filtered.map((item) => (
-                  <div
-                    key={item.id}
-                    className="group relative overflow-hidden rounded-lg bg-muted cursor-pointer aspect-video"
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent flex flex-col justify-end p-3 md:p-5">
-                      <span className="text-[10px] md:text-xs font-semibold text-white/70 mb-0.5 uppercase tracking-wider">
-                        {item.category}
-                      </span>
-                      <h3 className="text-white font-semibold text-xs md:text-base leading-tight">
-                        {item.title}
-                      </h3>
+                {filtered.map((item) => {
+                  const images = item.image.split(',');
+                  return (
+                    <div
+                      key={item.id}
+                      className="aspect-video"
+                    >
+                      <GallerySlideshow
+                        images={images}
+                        title={item.title}
+                        category={item.category}
+                      />
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-24 text-center">

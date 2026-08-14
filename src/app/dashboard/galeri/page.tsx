@@ -23,8 +23,8 @@ export default function GaleriPage() {
 
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("Umum");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>("");
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Fetch foto dari API
@@ -47,10 +47,10 @@ export default function GaleriPage() {
   }, [fetchPhotos]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setSelectedFile(file);
-      setPreviewUrl(URL.createObjectURL(file));
+    if (e.target.files && e.target.files.length > 0) {
+      const files = Array.from(e.target.files);
+      setSelectedFiles(files);
+      setPreviewUrls(files.map(f => URL.createObjectURL(f)));
     }
   };
 
@@ -59,32 +59,33 @@ export default function GaleriPage() {
       alert("Judul foto wajib diisi.");
       return;
     }
-    if (!selectedFile) {
-      alert("Pilih gambar terlebih dahulu.");
+    if (selectedFiles.length === 0) {
+      alert("Pilih minimal satu gambar terlebih dahulu.");
       return;
     }
 
     setSaving(true);
     try {
-      // 1. Upload gambar
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      const uploadRes = await axios.post("/api/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const imageUrls: string[] = [];
 
-      if (!uploadRes.data.success) throw new Error("Gagal upload gambar");
+      for (const file of selectedFiles) {
+        const formData = new FormData();
+        formData.append("file", file);
+        const uploadRes = await axios.post("/api/upload", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        if (!uploadRes.data.success) throw new Error("Gagal upload gambar");
+        imageUrls.push(uploadRes.data.url);
+      }
 
-      const imageUrl = uploadRes.data.url;
-
-      // 2. Simpan ke database
-      await axios.post("/api/galeri", { title, image: imageUrl, category });
+      // 2. Simpan ke database dengan URL dipisah koma
+      await axios.post("/api/galeri", { title, image: imageUrls.join(","), category });
 
       // 3. Reset form & refresh
       setTitle("");
       setCategory("Umum");
-      setSelectedFile(null);
-      setPreviewUrl("");
+      setSelectedFiles([]);
+      setPreviewUrls([]);
       if (fileInputRef.current) fileInputRef.current.value = "";
       setIsUploading(false);
       await fetchPhotos();
@@ -162,6 +163,7 @@ export default function GaleriPage() {
                   ref={fileInputRef}
                   type="file"
                   accept="image/*"
+                  multiple
                   onChange={handleFileChange}
                   className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-bold file:bg-primary file:text-white hover:file:bg-[#0B5A39] cursor-pointer"
                 />
@@ -180,10 +182,14 @@ export default function GaleriPage() {
             </div>
 
             {/* Preview */}
-            <div className="w-full h-full min-h-[200px] rounded-lg border border-dashed border-outline-variant bg-surface-container-low flex flex-col items-center justify-center text-on-surface-variant overflow-hidden">
-              {previewUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+            <div className="w-full h-full min-h-[200px] rounded-lg border border-dashed border-outline-variant bg-surface-container-low flex flex-col items-center justify-center text-on-surface-variant overflow-hidden p-4">
+              {previewUrls.length > 0 ? (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 w-full h-full overflow-y-auto max-h-[300px]">
+                  {previewUrls.map((url, i) => (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img key={i} src={url} alt={`Preview ${i}`} className="w-full aspect-square object-cover rounded-md" />
+                  ))}
+                </div>
               ) : (
                 <>
                   <ImageIcon className="h-10 w-10 mb-3 text-[#9CA3AF]" />
@@ -219,12 +225,18 @@ export default function GaleriPage() {
           {photos.map((photo) => (
             <div key={photo.id} className="group relative bg-surface-container-lowest rounded-lg overflow-hidden border border-outline-variant transition-all duration-300 hover:border-primary">
               <div className="relative aspect-video w-full overflow-hidden bg-surface-container-low">
+                {/* Ambil foto pertama jika ada koma */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={photo.image}
+                  src={photo.image.includes(',') ? photo.image.split(',')[0] : photo.image}
                   alt={photo.title}
                   className="w-full h-full object-cover transition-transform duration-700"
                 />
+                {photo.image.includes(',') && (
+                  <div className="absolute top-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded-md font-medium">
+                    +{photo.image.split(',').length - 1} Foto
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <button
                   onClick={() => handleDelete(photo.id)}

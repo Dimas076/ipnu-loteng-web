@@ -4,6 +4,7 @@ import { motion, Variants } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { GallerySlideshow } from "@/components/ui/GallerySlideshow";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -344,25 +345,23 @@ export function GaleriSection({ photos }: { photos: GaleriItem[] }) {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-          {display.map((photo, i) => (
-            <motion.div
-              key={photo.id}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="group relative overflow-hidden rounded-lg bg-muted cursor-pointer aspect-video"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={photo.image}
-                alt={photo.title}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent flex flex-col justify-end p-3 md:p-5">
-                <h4 className="text-white font-semibold text-xs md:text-sm leading-tight line-clamp-2">{photo.title}</h4>
-              </div>
-            </motion.div>
-          ))}
+          {display.map((photo, i) => {
+            const images = photo.image.split(',');
+            return (
+              <motion.div
+                key={photo.id}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                className="aspect-video"
+              >
+                <GallerySlideshow 
+                  images={images} 
+                  title={photo.title} 
+                />
+              </motion.div>
+            );
+          })}
         </div>
 
         <div className="mt-8 text-center md:hidden">
