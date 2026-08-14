@@ -327,16 +327,8 @@ export function GaleriSection({ photos }: { photos: GaleriItem[] }) {
   // Jika belum ada foto di DB, sembunyikan section ini
   if (photos.length === 0) return null;
 
-  // Ambil maks 4 foto untuk bento grid
+  // Ambil maks 4 foto
   const display = photos.slice(0, 4);
-
-  // Layout bento: slot pertama 2×2, lainnya 1×1
-  const bentoClasses = [
-    "col-span-2 md:col-span-2 md:row-span-2 aspect-[4/3] md:aspect-auto md:h-full",
-    "col-span-2 md:col-span-2 md:row-span-1 aspect-square md:aspect-auto md:h-full",
-    "col-span-1 aspect-square md:aspect-auto md:h-full",
-    "col-span-1 aspect-square md:aspect-auto md:h-full",
-  ];
 
   return (
     <section className="py-12 md:py-16 bg-background">
@@ -351,14 +343,14 @@ export function GaleriSection({ photos }: { photos: GaleriItem[] }) {
           </Button>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 md:grid-rows-2 gap-1 rounded-md overflow-hidden md:h-[480px]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
           {display.map((photo, i) => (
             <motion.div
               key={photo.id}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              className={`relative group overflow-hidden bg-muted ${bentoClasses[i] || "col-span-1 aspect-square"}`}
+              className="group relative overflow-hidden rounded-lg bg-muted cursor-pointer aspect-video"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -366,8 +358,8 @@ export function GaleriSection({ photos }: { photos: GaleriItem[] }) {
                 alt={photo.title}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent flex flex-col justify-end p-5">
-                <h4 className="font-semibold text-white text-base">{photo.title}</h4>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent flex flex-col justify-end p-3 md:p-5">
+                <h4 className="text-white font-semibold text-xs md:text-sm leading-tight line-clamp-2">{photo.title}</h4>
               </div>
             </motion.div>
           ))}
