@@ -162,16 +162,17 @@ export default function BeritaPage() {
                       })}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2 opacity-100 md:opacity-70 md:group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center justify-end gap-2 opacity-100 transition-opacity">
                         <Link href={`/dashboard/berita/edit/${post.id}`}>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-on-surface-variant hover:text-primary hover:bg-[#EEF7F2]">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg bg-surface-container-low text-[#0d631b] hover:text-white hover:bg-[#0d631b] border border-outline-variant" title="Edit Berita">
                             <Edit className="h-4 w-4" />
                           </Button>
                         </Link>
                         <Button 
                           variant="ghost" 
                           size="icon" 
-                          className="h-8 w-8 rounded-lg text-on-surface-variant hover:text-white hover:bg-[#da1e28]"
+                          className="h-8 w-8 rounded-lg bg-surface-container-low text-[#da1e28] hover:text-white hover:bg-[#da1e28] border border-outline-variant"
+                          title="Hapus Berita"
                           onClick={() => handleDelete(post.id)}
                         >
                           <Trash2 className="h-4 w-4" />
