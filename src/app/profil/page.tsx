@@ -12,6 +12,7 @@ export const revalidate = 60;
 
 export default async function ProfilPage() {
   const profile = await prisma.profile.findUnique({ where: { id: 1 } });
+  const pilars = await prisma.pilar.findMany();
   return (
     <MainLayout>
       {/* HERO SECTION */}
