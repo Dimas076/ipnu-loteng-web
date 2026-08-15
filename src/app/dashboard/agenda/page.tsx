@@ -5,7 +5,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import axios from "@/lib/axios";
 import { Button } from "@/components/ui/button";
-import { Plus, Edit, Trash2, Users, Calendar, Clock, MapPin } from "lucide-react";
+import { Plus, Edit, Trash2, Users, Calendar, Clock, MapPin, X } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const MapPicker = dynamic(() => import("@/components/MapPicker"), { ssr: false });
@@ -30,6 +30,7 @@ export default function AdminAgendaPage() {
     whatsapp_group_link: "",
     status: "open",
     image: "",
+    rundown: [] as {time: string, title: string}[],
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -59,8 +60,8 @@ export default function AdminAgendaPage() {
         title: agenda.title,
         description: agenda.description,
         category: agenda.category && agenda.category !== 'Semua' ? agenda.category : "Rapat",
-        date: agenda.date ? new Date(agenda.date).toISOString().split('T')[0] : "",
-        endDate: agenda.endDate ? new Date(agenda.endDate).toISOString().split('T')[0] : "",
+        date: agenda.date ? new Date(new Date(agenda.date).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16) : "",
+        endDate: agenda.endDate ? new Date(new Date(agenda.endDate).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16) : "",
         location: agenda.location,
         map_link: agenda.map_link || "",
         latitude: agenda.latitude || null,
@@ -68,6 +69,7 @@ export default function AdminAgendaPage() {
         whatsapp_group_link: agenda.whatsapp_group_link || "",
         status: agenda.status,
         image: agenda.image || "",
+        rundown: Array.isArray(agenda.rundown) ? agenda.rundown : [],
       });
     } else {
       setEditId(null);
@@ -84,9 +86,26 @@ export default function AdminAgendaPage() {
         whatsapp_group_link: "",
         status: "open",
         image: "",
+        rundown: [],
       });
     }
     setIsModalOpen(true);
+  };
+
+  const handleAddRundown = () => {
+    setFormData({ ...formData, rundown: [...formData.rundown, { time: "", title: "" }] });
+  };
+
+  const handleRemoveRundown = (index: number) => {
+    const newRundown = [...formData.rundown];
+    newRundown.splice(index, 1);
+    setFormData({ ...formData, rundown: newRundown });
+  };
+
+  const handleUpdateRundown = (index: number, field: 'time' | 'title', value: string) => {
+    const newRundown = [...formData.rundown];
+    newRundown[index][field] = value;
+    setFormData({ ...formData, rundown: newRundown });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -290,12 +309,12 @@ export default function AdminAgendaPage() {
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-bold text-foreground mb-1">Tanggal Mulai</label>
-                    <input type="date" required className="w-full p-2 border border-border rounded-lg focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all" value={formData.date} onChange={(e) => setFormData({...formData, date: e.target.value})} />
+                    <label className="block text-sm font-bold text-foreground mb-1">Waktu Mulai</label>
+                    <input type="datetime-local" required className="w-full p-2 border border-border rounded-lg focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all" value={formData.date} onChange={(e) => setFormData({...formData, date: e.target.value})} />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-foreground mb-1">Tanggal Selesai</label>
-                    <input type="date" className="w-full p-2 border border-border rounded-lg focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all" value={formData.endDate} onChange={(e) => setFormData({...formData, endDate: e.target.value})} />
+                    <label className="block text-sm font-bold text-foreground mb-1">Waktu Selesai</label>
+                    <input type="datetime-local" className="w-full p-2 border border-border rounded-lg focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all" value={formData.endDate} onChange={(e) => setFormData({...formData, endDate: e.target.value})} />
                   </div>
                 </div>
                 
@@ -329,6 +348,54 @@ export default function AdminAgendaPage() {
                 <div>
                   <label className="block text-sm font-bold text-foreground mb-1">Deskripsi & Syarat</label>
                   <textarea required rows={4} className="w-full p-2 border border-border rounded-lg focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})}></textarea>
+                </div>
+
+                <div className="border border-border p-4 rounded-lg bg-muted/20 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-sm font-bold text-foreground">Rundown Acara (Opsional)</label>
+                    <Button type="button" variant="outline" size="sm" onClick={handleAddRundown} className="h-8 gap-1">
+                      <Plus className="h-4 w-4" /> Tambah Rundown
+                    </Button>
+                  </div>
+                  {formData.rundown.length === 0 ? (
+                    <p className="text-sm text-muted-foreground italic text-center py-2">Belum ada rundown acara yang ditambahkan.</p>
+                  ) : (
+                    <div className="space-y-2">
+                      {formData.rundown.map((item, index) => (
+                        <div key={index} className="flex gap-2 items-start">
+                          <div className="w-1/3">
+                            <input 
+                              type="text" 
+                              placeholder="08:00 - 09:00" 
+                              required
+                              className="w-full p-2 border border-border rounded-lg focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all text-sm" 
+                              value={item.time} 
+                              onChange={(e) => handleUpdateRundown(index, 'time', e.target.value)} 
+                            />
+                          </div>
+                          <div className="w-full flex gap-2">
+                            <input 
+                              type="text" 
+                              placeholder="Kegiatan / Acara" 
+                              required
+                              className="w-full p-2 border border-border rounded-lg focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all text-sm" 
+                              value={item.title} 
+                              onChange={(e) => handleUpdateRundown(index, 'title', e.target.value)} 
+                            />
+                            <Button 
+                              type="button" 
+                              variant="ghost" 
+                              size="icon" 
+                              className="text-destructive hover:bg-destructive/10 hover:text-destructive shrink-0"
+                              onClick={() => handleRemoveRundown(index)}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 
                 <div>

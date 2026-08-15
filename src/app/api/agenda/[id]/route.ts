@@ -36,7 +36,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     const { id: paramId } = await params;
     const id = parseInt(paramId);
     const body = await request.json();
-    const { title, description, category, date, endDate, location, map_link, latitude, longitude, whatsapp_group_link, status, image } = body;
+    const { title, description, category, date, endDate, location, map_link, latitude, longitude, whatsapp_group_link, status, image, rundown } = body;
 
     const agenda = await prisma.agenda.update({
       where: { id },
@@ -53,6 +53,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         whatsapp_group_link: whatsapp_group_link || null,
         status: status || undefined,
         image: image !== undefined ? image : undefined,
+        rundown: rundown !== undefined ? rundown : undefined,
       }
     });
 

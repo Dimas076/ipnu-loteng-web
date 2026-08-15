@@ -121,6 +121,28 @@ export default function AgendaDetailPage() {
                 </div>
               </article>
 
+              {/* Rundown Acara */}
+              {agenda.rundown && Array.isArray(agenda.rundown) && agenda.rundown.length > 0 && (
+                <article className="bg-surface-container-lowest rounded-xl p-6 md:p-8 border border-outline-variant shadow-sm">
+                  <h2 className="text-xl md:text-2xl font-bold text-on-surface mb-6 flex items-center gap-3 border-b border-outline-variant pb-3">
+                    <CalendarClock className="w-6 h-6 text-primary" />
+                    Rundown Acara
+                  </h2>
+                  <div className="space-y-3">
+                    {agenda.rundown.map((item: any, idx: number) => (
+                      <div key={idx} className="flex gap-4 p-4 rounded-lg bg-surface-container-low border border-outline-variant hover:border-primary/30 transition-colors items-center">
+                        <div className="w-28 shrink-0 font-bold text-primary text-sm md:text-base">
+                          {item.time}
+                        </div>
+                        <div className="font-semibold text-on-surface text-base md:text-lg">
+                          {item.title}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </article>
+              )}
+
             </div>
 
             {/* Right Column (Sidebar) */}

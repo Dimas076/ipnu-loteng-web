@@ -57,6 +57,7 @@ model Agenda {
   longitude           Float?
   image               String?
   whatsapp_group_link String?
+  rundown             Json?
   status              String   @default("upcoming")
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
