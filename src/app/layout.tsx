@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans, Manrope } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { SiteProvider } from "@/contexts/SiteContext";
+import NextTopLoader from "nextjs-toploader";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -48,6 +49,7 @@ export default function RootLayout({
   return (
     <html lang="id" className={`${plusJakarta.variable} ${manrope.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-body bg-background text-foreground">
+        <NextTopLoader color="#0d631b" showSpinner={false} />
         <SiteProvider>
           <AuthProvider>
             {children}
