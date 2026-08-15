@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "@/lib/axios";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Save, Image as ImageIcon, Layout, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Save, Image as ImageIcon, Layout, CheckCircle2, Edit, Trash2 } from "lucide-react";
 import RichTextEditor from "@/components/ui/RichTextEditor";
 
 export default function CreateBeritaPage() {
@@ -148,34 +148,53 @@ export default function CreateBeritaPage() {
               <label className="text-sm font-bold text-on-surface">Gambar Sampul</label>
               <div className="relative group cursor-pointer">
                 {(formData.image || selectedFile) ? (
-                  <div className="w-full h-40 rounded-lg overflow-hidden border border-outline-variant relative">
+                  <div className="w-full h-40 rounded-lg overflow-hidden border border-outline-variant relative group/foto">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img 
                       src={selectedFile ? URL.createObjectURL(selectedFile) : formData.image} 
                       alt="Preview" 
                       className="w-full h-full object-cover" 
                     />
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
-                      <span className="text-white font-bold text-sm bg-black/50 px-3 py-1.5 rounded-lg">Ganti Foto</span>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-100 md:opacity-0 md:group-hover/foto:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute top-2 right-2 flex gap-2 opacity-100 md:opacity-0 md:group-hover/foto:opacity-100 transition-all duration-300 translate-y-0 md:translate-y-2 md:group-hover/foto:translate-y-0 z-10">
+                      <label className="bg-surface-container-lowest/90 backdrop-blur-sm text-[#0d631b] hover:text-white hover:bg-[#0d631b] p-2 rounded-lg border border-outline-variant transition-all duration-300 cursor-pointer">
+                        <Edit className="w-4 h-4" />
+                        <input 
+                          type="file" 
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            if (e.target.files && e.target.files[0]) {
+                              setSelectedFile(e.target.files[0]);
+                            }
+                          }}
+                        />
+                      </label>
+                      <button 
+                        type="button"
+                        onClick={() => { setSelectedFile(null); setFormData({...formData, image: ""}); }}
+                        className="bg-surface-container-lowest/90 backdrop-blur-sm text-[#da1e28] hover:text-white hover:bg-[#da1e28] p-2 rounded-lg border border-outline-variant transition-all duration-300 cursor-pointer"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
                 ) : (
-                  <div className="w-full h-40 rounded-lg border border-dashed border-outline-variant bg-surface-container-low flex flex-col items-center justify-center text-on-surface-variant group-hover:bg-[#E5E7EB] transition-colors">
+                  <label className="w-full h-40 rounded-lg border border-dashed border-outline-variant bg-surface-container-low flex flex-col items-center justify-center text-on-surface-variant group-hover:bg-[#E5E7EB] transition-colors cursor-pointer">
                     <ImageIcon className="h-8 w-8 mb-2 text-on-surface-variant group-hover:text-primary transition-colors" />
                     <span className="text-sm font-medium">Pratinjau Gambar</span>
-                  </div>
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          setSelectedFile(e.target.files[0]);
+                        }
+                      }}
+                    />
+                  </label>
                 )}
-                
-                <input 
-                  type="file" 
-                  accept="image/*"
-                  onChange={(e) => {
-                    if (e.target.files && e.target.files[0]) {
-                      setSelectedFile(e.target.files[0]);
-                    }
-                  }}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
               </div>
               <p className="text-xs text-on-surface-variant font-medium">Klik pada area pratinjau di atas untuk mengunggah gambar.</p>
             </div>

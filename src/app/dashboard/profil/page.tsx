@@ -11,9 +11,9 @@ import {
   Save, 
   Plus, 
   Trash2, 
-  ArrowUp,
   ArrowDown,
-  Image as ImageIcon 
+  Image as ImageIcon,
+  Edit
 } from "lucide-react";
 
 export default function ProfilOrganisasiPage() {
@@ -221,34 +221,53 @@ export default function ProfilOrganisasiPage() {
                     <label className="text-sm font-bold text-on-surface">Foto Sejarah Organisasi</label>
                     <div className="relative group cursor-pointer w-full sm:w-1/2">
                       {(sejarahImageUrl || sejarahImage) ? (
-                        <div className="w-full h-48 rounded-lg overflow-hidden border border-outline-variant relative bg-surface-container-low">
+                        <div className="w-full h-48 rounded-lg overflow-hidden border border-outline-variant relative bg-surface-container-low group/foto">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img 
                             src={sejarahImage ? URL.createObjectURL(sejarahImage) : sejarahImageUrl} 
                             alt="Preview Sejarah" 
                             className="w-full h-full object-cover" 
                           />
-                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
-                            <span className="text-white font-bold text-sm bg-black/50 px-3 py-1.5 rounded-lg">Ganti Foto</span>
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-100 md:opacity-0 md:group-hover/foto:opacity-100 transition-opacity duration-300" />
+                          <div className="absolute top-2 right-2 flex gap-2 opacity-100 md:opacity-0 md:group-hover/foto:opacity-100 transition-all duration-300 translate-y-0 md:translate-y-2 md:group-hover/foto:translate-y-0 z-10">
+                            <label className="bg-surface-container-lowest/90 backdrop-blur-sm text-[#0d631b] hover:text-white hover:bg-[#0d631b] p-2 rounded-lg border border-outline-variant transition-all duration-300 cursor-pointer">
+                              <Edit className="w-4 h-4" />
+                              <input 
+                                type="file" 
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => {
+                                  if (e.target.files && e.target.files[0]) {
+                                    setSejarahImage(e.target.files[0]);
+                                  }
+                                }}
+                              />
+                            </label>
+                            <button 
+                              type="button"
+                              onClick={() => { setSejarahImage(null); setSejarahImageUrl(""); }}
+                              className="bg-surface-container-lowest/90 backdrop-blur-sm text-[#da1e28] hover:text-white hover:bg-[#da1e28] p-2 rounded-lg border border-outline-variant transition-all duration-300 cursor-pointer"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
                           </div>
                         </div>
                       ) : (
-                        <div className="w-full h-48 rounded-lg border border-dashed border-outline-variant bg-surface-container-low flex flex-col items-center justify-center text-on-surface-variant group-hover:bg-[#E5E7EB] transition-colors">
+                        <label className="w-full h-48 rounded-lg border border-dashed border-outline-variant bg-surface-container-low flex flex-col items-center justify-center text-on-surface-variant group-hover:bg-[#E5E7EB] transition-colors cursor-pointer">
                           <ImageIcon className="h-8 w-8 mb-2 text-on-surface-variant group-hover:text-primary transition-colors" />
                           <span className="text-sm font-medium">Unggah Foto Sejarah</span>
-                        </div>
+                          <input 
+                            type="file" 
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              if (e.target.files && e.target.files[0]) {
+                                setSejarahImage(e.target.files[0]);
+                              }
+                            }}
+                          />
+                        </label>
                       )}
-                      
-                      <input 
-                        type="file" 
-                        accept="image/*"
-                        onChange={(e) => {
-                          if (e.target.files && e.target.files[0]) {
-                            setSejarahImage(e.target.files[0]);
-                          }
-                        }}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      />
                     </div>
                   </div>
 
@@ -371,7 +390,7 @@ export default function ProfilOrganisasiPage() {
                     <div key={item.id} className="flex flex-col sm:flex-row gap-6 p-5 border border-outline-variant bg-surface-container-low items-center sm:items-start relative group">
                       
                       {/* Photo Placeholder */}
-                      <label className="w-20 h-20 bg-surface-container-lowest border border-outline-variant flex flex-col items-center justify-center shrink-0 cursor-pointer hover:bg-[#F3F4F6] transition-colors mx-auto sm:mx-0 relative overflow-hidden group/foto">
+                      <div className="w-20 h-20 bg-surface-container-lowest border border-outline-variant flex flex-col items-center justify-center shrink-0 mx-auto sm:mx-0 relative overflow-hidden group/foto rounded-lg">
                         {(item.foto || item.fotoUrl) ? (
                           <>
                             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -380,29 +399,56 @@ export default function ProfilOrganisasiPage() {
                               alt={item.nama} 
                               className="w-full h-full object-cover" 
                             />
-                            <div className="absolute inset-0 bg-black/40 flex md:hidden md:group-hover/foto:flex items-center justify-center">
-                              <span className="text-[10px] font-bold text-white uppercase text-center leading-tight">Ganti<br/>Foto</span>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-100 md:opacity-0 md:group-hover/foto:opacity-100 transition-opacity duration-300" />
+                            <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 opacity-100 md:opacity-0 md:group-hover/foto:opacity-100 transition-opacity duration-300 z-10">
+                              <label className="bg-surface-container-lowest/90 backdrop-blur-sm text-[#0d631b] hover:text-white hover:bg-[#0d631b] p-1.5 rounded border border-outline-variant transition-all duration-300 cursor-pointer">
+                                <Edit className="w-3 h-3" />
+                                <input 
+                                  type="file" 
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={(e) => {
+                                    if (e.target.files && e.target.files[0]) {
+                                      const newArr = [...pengurus];
+                                      newArr[index].foto = e.target.files[0];
+                                      setPengurus(newArr);
+                                    }
+                                  }}
+                                />
+                              </label>
+                              <button 
+                                type="button"
+                                onClick={() => {
+                                  const newArr = [...pengurus];
+                                  newArr[index].foto = null;
+                                  newArr[index].fotoUrl = "";
+                                  setPengurus(newArr);
+                                }}
+                                className="bg-surface-container-lowest/90 backdrop-blur-sm text-[#da1e28] hover:text-white hover:bg-[#da1e28] p-1.5 rounded border border-outline-variant transition-all duration-300 cursor-pointer"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </button>
                             </div>
                           </>
                         ) : (
-                          <>
+                          <label className="w-full h-full flex flex-col items-center justify-center cursor-pointer hover:bg-[#F3F4F6] transition-colors">
                             <ImageIcon className="w-6 h-6 text-[#9CA3AF] mb-1" />
                             <span className="text-[10px] font-bold text-[#9CA3AF]">FOTO</span>
-                          </>
+                            <input 
+                              type="file" 
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(e) => {
+                                if (e.target.files && e.target.files[0]) {
+                                  const newArr = [...pengurus];
+                                  newArr[index].foto = e.target.files[0];
+                                  setPengurus(newArr);
+                                }
+                              }}
+                            />
+                          </label>
                         )}
-                        <input 
-                          type="file" 
-                          accept="image/*"
-                          className="hidden"
-                          onChange={(e) => {
-                            if (e.target.files && e.target.files[0]) {
-                              const newArr = [...pengurus];
-                              newArr[index].foto = e.target.files[0];
-                              setPengurus(newArr);
-                            }
-                          }}
-                        />
-                      </label>
+                      </div>
 
                       <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
                         <div className="space-y-1">
