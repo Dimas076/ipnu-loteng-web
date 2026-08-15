@@ -106,6 +106,20 @@ export default function GaleriPage() {
     }
   };
 
+  const handleRemoveFile = (indexToRemove: number) => {
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== indexToRemove));
+    setPreviewUrls((prev) => {
+      // Bebaskan memory URL
+      URL.revokeObjectURL(prev[indexToRemove]);
+      return prev.filter((_, i) => i !== indexToRemove);
+    });
+    
+    // Jika semua file dihapus, reset input file
+    if (selectedFiles.length === 1 && fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   const handleEdit = (photo: GaleriPhoto) => {
     setEditId(photo.id);
     setTitle(photo.title);
@@ -216,8 +230,19 @@ export default function GaleriPage() {
               {previewUrls.length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2 w-full h-full overflow-y-auto max-h-[300px]">
                   {previewUrls.map((url, i) => (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img key={i} src={url} alt={`Preview ${i}`} className="w-full aspect-square object-cover rounded-md" />
+                    <div key={i} className="relative group">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={url} alt={`Preview ${i}`} className="w-full aspect-square object-cover rounded-md border border-outline-variant" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-100 transition-opacity rounded-md" />
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveFile(i)}
+                        className="absolute top-1 right-1 bg-surface-container-lowest/90 backdrop-blur-sm text-[#da1e28] hover:text-white hover:bg-[#da1e28] p-1.5 rounded-md border border-outline-variant transition-all duration-300"
+                        title="Hapus foto ini"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   ))}
                 </div>
               ) : (
