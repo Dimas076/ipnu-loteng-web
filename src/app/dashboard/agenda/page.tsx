@@ -173,17 +173,18 @@ export default function AdminAgendaPage() {
                   <th className="p-4 font-bold text-foreground">Kategori</th>
                   <th className="p-4 font-bold text-foreground">Waktu & Tempat</th>
                   <th className="p-4 font-bold text-foreground">Status</th>
+                  <th className="p-4 font-bold text-foreground text-center">Peserta</th>
                   <th className="p-4 font-bold text-foreground text-right">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
                 {loading ? (
                   <tr>
-                    <td colSpan={5} className="p-8 text-center text-muted-foreground">Memuat data...</td>
+                    <td colSpan={6} className="p-8 text-center text-muted-foreground">Memuat data...</td>
                   </tr>
                 ) : agendas.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="p-8 text-center text-muted-foreground">Belum ada agenda</td>
+                    <td colSpan={6} className="p-8 text-center text-muted-foreground">Belum ada agenda</td>
                   </tr>
                 ) : (
                   agendas.map((agenda) => (
@@ -229,13 +230,15 @@ export default function AdminAgendaPage() {
                         {agenda.status === 'open' ? 'Buka' : agenda.status === 'closed' ? 'Ditutup' : 'Selesai'}
                       </span>
                       </td>
-                      <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-2 opacity-100 transition-opacity">
-                        <Link href={`/dashboard/agenda/${agenda.id}`}>
+                      <td className="p-4 text-center">
+                        <Link href={`/dashboard/agenda/${agenda.id}`} className="inline-block">
                           <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg bg-surface-container-low text-[#1565c0] hover:text-white hover:bg-[#1565c0] border border-outline-variant" title="Lihat Pendaftar">
                             <Users className="h-4 w-4" />
                           </Button>
                         </Link>
+                      </td>
+                      <td className="p-4 text-right">
+                      <div className="flex items-center justify-end gap-2 opacity-100 transition-opacity">
                         <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg bg-surface-container-low text-[#0d631b] hover:text-white hover:bg-[#0d631b] border border-outline-variant" title="Edit Agenda" onClick={() => handleOpenModal(agenda)}>
                           <Edit className="h-4 w-4" />
                         </Button>
