@@ -272,12 +272,12 @@ export default function AgendaPage() {
               {/* Documentation Section */}
               {galleries.length > 0 && (
                 <section className="pt-8 mb-12">
-                  <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center justify-between mb-6 gap-2">
                     <div className="flex items-center gap-2">
-                      <CalendarIcon className="w-5 h-5 text-on-surface-variant" />
-                      <h2 className="text-xl font-bold text-on-surface">Dokumentasi Kegiatan</h2>
+                      <CalendarIcon className="w-5 h-5 text-on-surface-variant shrink-0" />
+                      <h2 className="text-lg sm:text-xl font-bold text-on-surface leading-tight">Dokumentasi Kegiatan</h2>
                     </div>
-                    <Link href="/galeri" className="font-bold text-xs hover:underline uppercase tracking-wide text-primary">
+                    <Link href="/galeri" className="font-bold text-xs hover:underline uppercase tracking-wide text-primary shrink-0">
                       Lihat Semua
                     </Link>
                   </div>
