@@ -182,8 +182,8 @@ export default function EditBeritaPage() {
                       alt="Preview" 
                       className="w-full h-full object-cover" 
                     />
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <span className="text-white font-bold text-sm bg-black/50 px-3 py-1.5 rounded-lg">Ganti Gambar</span>
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                      <span className="text-white font-bold text-sm bg-black/50 px-3 py-1.5 rounded-lg">Ganti Foto</span>
                     </div>
                   </div>
                 ) : (

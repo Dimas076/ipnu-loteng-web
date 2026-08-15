@@ -237,10 +237,10 @@ export default function GaleriPage() {
                     +{photo.image.split(',').length - 1} Foto
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300" />
                 <button
                   onClick={() => handleDelete(photo.id)}
-                  className="absolute top-4 right-4 bg-surface-container-lowest/90 backdrop-blur-sm text-[#da1e28] hover:text-white hover:bg-[#da1e28] p-2.5 rounded-lg border border-outline-variant opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
+                  className="absolute top-4 right-4 bg-surface-container-lowest/90 backdrop-blur-sm text-[#da1e28] hover:text-white hover:bg-[#da1e28] p-2.5 rounded-lg border border-outline-variant opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 translate-y-0 md:translate-y-2 md:group-hover:translate-y-0"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
