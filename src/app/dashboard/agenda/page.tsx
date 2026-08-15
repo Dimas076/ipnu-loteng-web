@@ -192,8 +192,8 @@ export default function AdminAgendaPage() {
                   <th className="p-4 font-bold text-foreground">Kategori</th>
                   <th className="p-4 font-bold text-foreground">Waktu & Tempat</th>
                   <th className="p-4 font-bold text-foreground">Status</th>
-                  <th className="p-4 font-bold text-foreground text-center">Peserta</th>
-                  <th className="p-4 font-bold text-foreground text-center">Aksi</th>
+                  <th className="p-4 font-bold text-foreground text-center w-24">Peserta</th>
+                  <th className="p-4 font-bold text-foreground text-center w-32">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
@@ -230,7 +230,9 @@ export default function AdminAgendaPage() {
                           <Clock className="w-3.5 h-3.5 mr-1.5 text-on-surface-variant" />
                           {new Date(agenda.date).toLocaleDateString('id-ID', {
                             weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'
-                          })}
+                          })} - {new Date(agenda.date).toLocaleTimeString('id-ID', {
+                            hour: '2-digit', minute: '2-digit'
+                          })} WITA
                         </span>
                         <span className="flex items-center text-on-surface-variant">
                           <MapPin className="w-3.5 h-3.5 mr-1.5" />
@@ -347,7 +349,7 @@ export default function AdminAgendaPage() {
                 
                 <div>
                   <label className="block text-sm font-bold text-foreground mb-1">Deskripsi & Syarat</label>
-                  <textarea required rows={4} className="w-full p-2 border border-border rounded-lg focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})}></textarea>
+                  <textarea rows={4} className="w-full p-2 border border-border rounded-lg focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})}></textarea>
                 </div>
 
                 <div className="border border-border p-4 rounded-lg bg-muted/20 space-y-3">
@@ -367,7 +369,6 @@ export default function AdminAgendaPage() {
                             <input 
                               type="text" 
                               placeholder="08:00 - 09:00" 
-                              required
                               className="w-full p-2 border border-border rounded-lg focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all text-sm" 
                               value={item.time} 
                               onChange={(e) => handleUpdateRundown(index, 'time', e.target.value)} 
@@ -377,7 +378,6 @@ export default function AdminAgendaPage() {
                             <input 
                               type="text" 
                               placeholder="Kegiatan / Acara" 
-                              required
                               className="w-full p-2 border border-border rounded-lg focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all text-sm" 
                               value={item.title} 
                               onChange={(e) => handleUpdateRundown(index, 'title', e.target.value)} 
@@ -424,10 +424,18 @@ export default function AdminAgendaPage() {
                 {editId && (
                   <div>
                     <label className="block text-sm font-bold text-foreground mb-1">Status Pendaftaran</label>
-                    <select className="w-full p-2 border border-border rounded-lg focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all" value={formData.status} onChange={(e) => setFormData({...formData, status: e.target.value})}>
-                      <option value="open">Buka (Open)</option>
-                      <option value="closed">Tutup (Closed)</option>
-                      <option value="completed">Selesai (Completed)</option>
+                    <select 
+                      className={`w-full p-2 border border-border rounded-lg focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all ${
+                        formData.status === 'open' ? 'text-[#0d631b] bg-[#EEF7F2] font-semibold' :
+                        formData.status === 'closed' ? 'text-[#da1e28] bg-[#fdefef] font-semibold' :
+                        'text-[#1565c0] bg-[#e3f2fd] font-semibold'
+                      }`} 
+                      value={formData.status} 
+                      onChange={(e) => setFormData({...formData, status: e.target.value})}
+                    >
+                      <option value="open" className="text-[#0d631b] font-semibold">Buka (Open)</option>
+                      <option value="closed" className="text-[#da1e28] font-semibold">Tutup (Closed)</option>
+                      <option value="completed" className="text-[#1565c0] font-semibold">Selesai (Completed)</option>
                     </select>
                   </div>
                 )}
