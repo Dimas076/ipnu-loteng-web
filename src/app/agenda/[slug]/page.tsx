@@ -117,44 +117,10 @@ export default function AgendaDetailPage() {
                   Tentang Kegiatan
                 </h2>
                 <div className="text-on-surface-variant space-y-4 leading-relaxed whitespace-pre-wrap text-base md:text-lg">
-                  {agenda.description || "Masa Kesetiaan Anggota (MAKESTA) adalah gerbang awal kaderisasi untuk membentuk anggota yang militan dan berwawasan Nusantara. Kegiatan ini dirancang khusus untuk memperkenalkan nilai-nilai dasar organisasi, ke-NU-an, dan kebangsaan kepada calon anggota baru."}
-                </div>
-                
-                <div className="mt-8 bg-surface-container-low p-6 rounded-lg border-l-4 border-primary">
-                  <p className="font-semibold text-on-surface mb-3 text-sm md:text-base">Tujuan Kegiatan:</p>
-                  <ul className="list-disc pl-5 space-y-2 text-on-surface-variant text-sm md:text-base">
-                    <li>Mengenalkan dasar-dasar organisasi IPNU.</li>
-                    <li>Menanamkan nilai-nilai Ahlussunnah wal Jama&apos;ah.</li>
-                    <li>Membentuk karakter kepemimpinan yang progresif.</li>
-                  </ul>
+                  {agenda.description || <span className="italic text-muted-foreground">Tidak ada deskripsi untuk agenda ini.</span>}
                 </div>
               </article>
 
-              {/* Schedule (Rundown) */}
-              <article className="bg-surface-container-lowest rounded-xl p-6 md:p-8 border border-outline-variant shadow-sm">
-                <h2 className="text-xl md:text-2xl font-bold text-on-surface mb-8 flex items-center gap-3 border-b border-outline-variant pb-3">
-                  <CalendarClock className="w-6 h-6 text-primary" />
-                  Rundown Acara
-                </h2>
-                
-                <div className="relative space-y-4 py-2 mt-2 ml-2 border-l-2 border-outline-variant/50 pl-6">
-                  {[
-                    { time: "08:00 - 09:00", title: "Registrasi Peserta", isItalic: false },
-                    { time: "09:00 - 10:00", title: "Pembukaan & Sambutan", isItalic: false },
-                    { time: "10:00 - 12:00", title: "Materi I: Ke-NU-an & Ke-Aswaja-an", isItalic: false },
-                    { time: "12:00 - 13:00", title: "Ishoma (Istirahat, Sholat, Makan)", isItalic: true },
-                    { time: "13:00 - 15:00", title: "Materi II: Ke-IPNU-an & Kepemimpinan", isItalic: false },
-                    { time: "15:00 - 16:00", title: "Penutupan & RTL", isItalic: false }
-                  ].map((item, i) => (
-                    <div key={i} className="relative group">
-                      <div className="bg-surface-container-low p-4 rounded-lg border border-outline-variant/50 hover:border-primary/50 transition-colors">
-                        <h3 className="font-bold text-on-surface text-sm">{item.time}</h3>
-                        <p className={`text-sm text-on-surface-variant mt-1 ${item.isItalic ? 'italic' : ''}`}>{item.title}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </article>
             </div>
 
             {/* Right Column (Sidebar) */}
@@ -180,7 +146,10 @@ export default function AgendaDetailPage() {
                     </div>
                     <div>
                       <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Waktu</p>
-                      <p className="font-semibold text-on-surface">08:00 - Selesai WITA</p>
+                      <p className="font-semibold text-on-surface">
+                        {new Date(agenda.date).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })} 
+                        {agenda.endDate ? ` - ${new Date(agenda.endDate).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}` : ' - Selesai'} WITA
+                      </p>
                     </div>
                   </li>
                   <li className="flex items-start gap-4">
@@ -190,17 +159,6 @@ export default function AgendaDetailPage() {
                     <div>
                       <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Lokasi</p>
                       <p className="font-semibold text-on-surface">{agenda.location}</p>
-                      <p className="text-sm text-on-surface-variant mt-1">Gedung NU Center, Lombok Tengah</p>
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-4">
-                    <div className="p-2 bg-surface-container-low rounded-lg text-tertiary shrink-0">
-                      <Ticket className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Biaya</p>
-                      <p className="font-bold text-tertiary text-lg">Gratis (Free)</p>
-                      <p className="text-sm text-on-surface-variant mt-1">Terbuka untuk umum khusus pelajar/santri.</p>
                     </div>
                   </li>
                 </ul>
@@ -229,7 +187,7 @@ export default function AgendaDetailPage() {
                     ) : (
                       <div className="w-full h-48 bg-surface-container rounded-lg overflow-hidden border border-outline-variant relative">
                         <iframe 
-                          src={`https://maps.google.com/maps?q=${encodeURIComponent(agenda.location || 'Gedung NU Center, Lombok Tengah')}&t=m&z=15&ie=UTF8&iwloc=&output=embed`} 
+                          src={`https://maps.google.com/maps?q=${encodeURIComponent(agenda.location || 'Lombok Tengah')}&t=m&z=15&ie=UTF8&iwloc=&output=embed`} 
                           width="100%" 
                           height="100%" 
                           style={{ border: 0 }} 
