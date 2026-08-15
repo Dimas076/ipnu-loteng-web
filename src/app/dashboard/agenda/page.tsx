@@ -222,10 +222,10 @@ export default function AdminAgendaPage() {
                     <td className="p-4">
                       <span className={`inline-flex px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider border ${
                         agenda.status === 'open' 
-                          ? 'bg-surface-container-lowest text-on-surface-variant border-outline' 
-                          : agenda.status === 'ongoing'
-                            ? 'bg-[#DDF3E8] text-primary border-transparent'
-                            : 'bg-surface-container-low text-on-surface-variant border-outline-variant'
+                          ? 'bg-[#EEF7F2] text-[#0d631b] border-[#0d631b]/20' 
+                          : agenda.status === 'closed'
+                            ? 'bg-[#fdefef] text-[#da1e28] border-[#da1e28]/20'
+                            : 'bg-[#e3f2fd] text-[#1565c0] border-[#1565c0]/20'
                       }`}>
                         {agenda.status === 'open' ? 'Buka' : agenda.status === 'closed' ? 'Ditutup' : 'Selesai'}
                       </span>
