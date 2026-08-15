@@ -174,7 +174,7 @@ export default function AdminAgendaPage() {
                   <th className="p-4 font-bold text-foreground">Waktu & Tempat</th>
                   <th className="p-4 font-bold text-foreground">Status</th>
                   <th className="p-4 font-bold text-foreground text-center">Peserta</th>
-                  <th className="p-4 font-bold text-foreground text-right">Aksi</th>
+                  <th className="p-4 font-bold text-foreground text-center">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
@@ -237,8 +237,8 @@ export default function AdminAgendaPage() {
                           </Button>
                         </Link>
                       </td>
-                      <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-2 opacity-100 transition-opacity">
+                      <td className="p-4 text-center">
+                      <div className="flex items-center justify-center gap-2 opacity-100 transition-opacity">
                         <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg bg-surface-container-low text-[#0d631b] hover:text-white hover:bg-[#0d631b] border border-outline-variant" title="Edit Agenda" onClick={() => handleOpenModal(agenda)}>
                           <Edit className="h-4 w-4" />
                         </Button>

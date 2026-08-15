@@ -99,7 +99,7 @@ export default function BeritaPage() {
                 <th className="px-6 py-4 whitespace-nowrap">Status</th>
                 <th className="px-6 py-4 whitespace-nowrap">Penulis</th>
                 <th className="px-6 py-4 whitespace-nowrap">Tanggal</th>
-                <th className="px-6 py-4 text-right whitespace-nowrap">Aksi</th>
+                <th className="px-6 py-4 text-center whitespace-nowrap">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -161,8 +161,8 @@ export default function BeritaPage() {
                         year: 'numeric'
                       })}
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2 opacity-100 transition-opacity">
+                    <td className="px-6 py-4 text-center">
+                      <div className="flex items-center justify-center gap-2 opacity-100 transition-opacity">
                         <Link href={`/dashboard/berita/edit/${post.id}`}>
                           <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg bg-surface-container-low text-[#0d631b] hover:text-white hover:bg-[#0d631b] border border-outline-variant" title="Edit Berita">
                             <Edit className="h-4 w-4" />
