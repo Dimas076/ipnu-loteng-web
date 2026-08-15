@@ -10,6 +10,7 @@ export default function BeritaPage() {
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [filterCategory, setFilterCategory] = useState("Semua");
 
   useEffect(() => {
     fetchPosts();
@@ -36,6 +37,14 @@ export default function BeritaPage() {
       }
     }
   };
+
+  const categories = Array.from(new Set(posts.map((p) => p.category).filter(Boolean)));
+
+  const filteredPosts = posts.filter((post) => {
+    const matchSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchCategory = filterCategory === "Semua" || post.category === filterCategory;
+    return matchSearch && matchCategory;
+  });
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -69,10 +78,16 @@ export default function BeritaPage() {
               className="w-full pl-10 pr-4 py-2 border border-outline rounded-lg text-sm focus:ring-1 focus:ring-[#0F6D46] focus:border-primary focus:outline-none transition-all bg-surface-container-lowest text-on-surface placeholder:text-[#9CA3AF]"
             />
           </div>
-          <Button variant="outline" className="w-full sm:w-auto rounded-lg bg-surface-container-lowest text-on-surface-variant border-outline hover:bg-surface-container-low">
-            <Filter className="h-4 w-4 mr-2 text-on-surface-variant" />
-            Filter
-          </Button>
+          <select
+            value={filterCategory}
+            onChange={(e) => setFilterCategory(e.target.value)}
+            className="w-full sm:w-auto px-4 py-2 border border-outline rounded-lg text-sm bg-surface-container-lowest text-on-surface focus:outline-none focus:ring-1 focus:ring-primary"
+          >
+            <option value="Semua">Semua Kategori</option>
+            {categories.map((c: any) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
         </div>
 
         {/* Table Content */}
@@ -97,7 +112,7 @@ export default function BeritaPage() {
                     </div>
                   </td>
                 </tr>
-              ) : posts.length === 0 ? (
+              ) : filteredPosts.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-16 text-center">
                     <div className="flex flex-col items-center justify-center space-y-4">
@@ -105,22 +120,16 @@ export default function BeritaPage() {
                         <FileText className="h-10 w-10 text-muted-foreground/50" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-bold text-foreground">Belum Ada Berita</h3>
+                        <h3 className="text-lg font-bold text-foreground">Tidak Ada Berita</h3>
                         <p className="text-muted-foreground mt-1 max-w-sm mx-auto">
-                          Anda belum menulis artikel atau berita apa pun. Mulai bagikan informasi penting sekarang!
+                          Tidak ditemukan berita yang cocok dengan pencarian Anda.
                         </p>
                       </div>
-                      <Link href="/dashboard/berita/create" className="mt-2">
-                        <Button variant="outline" className="rounded-lg border-dashed border-2 border-border hover:border-primary hover:text-primary transition-colors">
-                          <Plus className="h-4 w-4 mr-2" />
-                          Buat Berita Pertama
-                        </Button>
-                      </Link>
                     </div>
                   </td>
                 </tr>
               ) : (
-                posts.map((post) => (
+                filteredPosts.map((post) => (
                   <tr key={post.id} className="bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-low border-b border-outline-variant transition-colors group">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
@@ -153,7 +162,7 @@ export default function BeritaPage() {
                       })}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2 opacity-70 group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center justify-end gap-2 opacity-100 md:opacity-70 md:group-hover:opacity-100 transition-opacity">
                         <Link href={`/dashboard/berita/edit/${post.id}`}>
                           <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-on-surface-variant hover:text-primary hover:bg-[#EEF7F2]">
                             <Edit className="h-4 w-4" />
