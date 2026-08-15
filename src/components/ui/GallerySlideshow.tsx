@@ -22,15 +22,15 @@ export function GallerySlideshow({ images, title, category }: GallerySlideshowPr
 
   return (
     <div className="group relative overflow-hidden rounded-lg bg-muted cursor-pointer aspect-video w-full h-full">
-      <AnimatePresence mode="popLayout">
+      <AnimatePresence initial={false}>
         <motion.img
           key={currentIndex}
           src={images[currentIndex]}
           alt={title}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1 }}
+          initial={{ x: "100%" }}
+          animate={{ x: 0 }}
+          exit={{ x: "-100%" }}
+          transition={{ type: "tween", ease: "easeInOut", duration: 0.8 }}
           className="w-full h-full object-cover absolute inset-0"
         />
       </AnimatePresence>
@@ -45,20 +45,6 @@ export function GallerySlideshow({ images, title, category }: GallerySlideshowPr
         <h4 className="text-white font-semibold text-xs md:text-sm leading-tight line-clamp-2">{title}</h4>
       </div>
 
-      {/* Indikator foto */}
-      {images.length > 1 && (
-        <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm rounded-full px-2 py-1 flex gap-1 items-center z-10">
-          {images.length <= 5 ? (
-            images.map((_, i) => (
-              <div key={i} className={`w-1.5 h-1.5 rounded-full transition-colors ${i === currentIndex ? 'bg-white' : 'bg-white/40'}`} />
-            ))
-          ) : (
-            <span className="text-[10px] text-white font-medium px-1 tracking-widest">
-              {currentIndex + 1} / {images.length}
-            </span>
-          )}
-        </div>
-      )}
     </div>
   );
 }
