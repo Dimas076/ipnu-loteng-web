@@ -17,28 +17,44 @@ const itemVariants: Variants = {
 };
 
 // ─── Hero Section ───────────────────────────────────────────────────────────
-export function HeroSection() {
+export function HeroSection({ profile }: { profile?: any }) {
+  // Ambil foto dari profile jika ada
+  const heroImages = [
+    profile?.hero_image_1 || null,
+    profile?.hero_image_2 || null,
+    profile?.hero_image_3 || null,
+  ];
+
   return (
-    <section className="relative pt-12 pb-16 md:pt-20 md:pb-24 overflow-hidden border-b border-border bg-background">
-      {/* Massive Ambient Background Glows */}
-      <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/4 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
-      
+    <section className="relative pt-10 pb-16 md:pt-16 md:pb-24 lg:pt-20 lg:pb-28 overflow-hidden bg-background">
+      {/* ── Decorative Background ── */}
+      <div className="absolute top-0 right-0 -translate-y-20 translate-x-1/4 w-[700px] h-[700px] bg-primary/[0.04] rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[500px] h-[500px] bg-primary/[0.03] rounded-full blur-[100px] pointer-events-none" />
+
       <div className="container mx-auto px-4 max-w-6xl relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-[60%_40%] gap-12 lg:gap-8 items-center">
-          
-          {/* Kiri: Tipografi */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+
+          {/* ── KIRI: Teks & CTA ── */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="flex flex-col text-center lg:text-left mx-auto lg:mx-0 max-w-2xl lg:max-w-none"
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col text-center lg:text-left mx-auto lg:mx-0 max-w-xl lg:max-w-none order-2 lg:order-1"
           >
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter text-foreground leading-[1.05] mb-6">
-              Bergerak Riang <span className="text-primary italic block md:inline">Gembira.</span>
+
+
+            {/* Heading */}
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[3.5rem] xl:text-6xl font-extrabold tracking-tighter text-foreground leading-[1.08] mb-6">
+              Bergerak Riang{' '}
+              <span className="text-primary italic">Gembira.</span>
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-[60ch] mb-8 mx-auto lg:mx-0">
+
+            {/* Deskripsi */}
+            <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-[52ch] mb-8 mx-auto lg:mx-0">
               Wadah pergerakan, pengkaderan, dan intelektual pelajar Nahdlatul Ulama yang toleran dan berwawasan kebangsaan.
             </p>
+
+            {/* Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
               <Button size="lg" className="rounded-md text-base group" asChild>
                 <Link href="/agenda">
@@ -53,29 +69,53 @@ export function HeroSection() {
             </div>
           </motion.div>
 
-          {/* Kanan: Floating UI Elements Tanpa Kotak Pembatas */}
+          {/* ── KANAN: Kolase Foto + Dekorasi ── */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-            className="hidden lg:flex relative h-full w-full items-center justify-center min-h-[450px]"
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+            className="relative w-full order-1 lg:order-2 hidden lg:block"
           >
-             {/* Center Logo Hub */}
-             <div className="relative w-40 h-40 xl:w-48 xl:h-48 bg-white shadow-2xl rounded-full flex items-center justify-center border border-white/50 transform hover:scale-105 transition-all duration-700 ease-out z-10 group">
-                <div className="absolute -inset-8 border border-primary/20 rounded-full opacity-50 group-hover:animate-[spin_12s_linear_infinite]" />
-                <div className="absolute -inset-16 border border-primary/10 rounded-full opacity-30 group-hover:animate-[spin_18s_linear_infinite_reverse]" />
-                <span className="text-7xl xl:text-8xl font-black text-primary tracking-tighter">IP</span>
-             </div>
-             
-             {/* Floating Badges */}
-             <div className="absolute bottom-12 left-0 xl:-left-12 bg-white/70 backdrop-blur-xl px-6 py-3.5 rounded-2xl border border-white/40 shadow-xl transform hover:-translate-y-1 transition-transform duration-300 z-20">
-                <p className="text-sm font-bold text-foreground">Ahlussunnah wal Jama'ah</p>
-                <p className="text-xs text-muted-foreground font-medium">Nilai Dasar Pergerakan</p>
-             </div>
-             
-             <div className="absolute top-12 right-0 xl:-right-4 bg-primary text-white px-5 py-2.5 rounded-xl shadow-xl transform hover:-translate-y-1 transition-transform duration-300 rotate-3 z-20">
-                <p className="text-xs font-bold uppercase tracking-widest">Kolaborasi Pelajar</p>
-             </div>
+            {/* Grid rapi: 1 foto tinggi kiri + 2 foto susun kanan */}
+            <div className="grid grid-cols-5 grid-rows-2 gap-3 md:gap-4 mx-auto max-w-md lg:max-w-none">
+
+              {/* Foto 1: Besar, tinggi (span 2 baris) */}
+              <div className="col-span-3 row-span-2 rounded-2xl overflow-hidden shadow-lg aspect-[3/4]">
+                {heroImages[0] ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={heroImages[0]} alt="Kegiatan IPNU Lombok Tengah" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-primary/15 via-primary/8 to-primary/3 flex items-center justify-center">
+                    <span className="text-5xl font-black text-primary/20 tracking-tighter">IPNU</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Foto 2: Kanan atas */}
+              <div className="col-span-2 rounded-2xl overflow-hidden shadow-lg">
+                {heroImages[1] ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={heroImages[1]} alt="Aktivitas IPNU" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-primary/12 to-primary/4 flex items-center justify-center">
+                    <span className="text-3xl font-black text-primary/15 tracking-tighter">NU</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Foto 3: Kanan bawah */}
+              <div className="col-span-2 rounded-2xl overflow-hidden shadow-lg">
+                {heroImages[2] ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={heroImages[2]} alt="IPNU Loteng" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-primary/90 flex items-center justify-center">
+                    <span className="text-2xl font-black text-white/80 tracking-tighter">IP</span>
+                  </div>
+                )}
+              </div>
+
+            </div>
           </motion.div>
 
         </div>

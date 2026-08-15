@@ -13,7 +13,9 @@ import {
   Image as ImageIcon,
   X,
   ChevronRight,
-  Building
+  Building,
+  Globe,
+  LogOut
 } from "lucide-react";
 
 interface SidebarProps {
@@ -23,16 +25,17 @@ interface SidebarProps {
 
 export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { logoUrl } = useSite();
 
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Berita", href: "/dashboard/berita", icon: FileText },
-    { name: "PAC", href: "/dashboard/pac", icon: Users },
     { name: "Agenda", href: "/dashboard/agenda", icon: Calendar },
     { name: "Galeri", href: "/dashboard/galeri", icon: ImageIcon },
     { name: "Profil Organisasi", href: "/dashboard/profil", icon: Building },
+    { name: "Pengurus", href: "/dashboard/pengurus", icon: Users },
+    { name: "PAC", href: "/dashboard/pac", icon: Users },
     { name: "Pengaturan", href: "/dashboard/pengaturan", icon: Settings },
   ];
 
@@ -100,20 +103,33 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
               </Link>
             );
           })}
+          {/* Mobile-only Actions */}
+          <div className="px-6 mt-8 mb-3 md:hidden">
+            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Lainnya</p>
+          </div>
+          
+          <Link
+            href="/"
+            target="_blank"
+            onClick={() => setIsOpen && setIsOpen(false)}
+            className="flex md:hidden items-center px-6 py-3 text-sm transition-colors group border-l-4 text-muted-foreground border-transparent hover:bg-muted hover:text-foreground hover:border-border"
+          >
+            <Globe className="mr-3 h-5 w-5 text-muted-foreground group-hover:text-foreground" />
+            Kunjungi Web
+          </Link>
+          
+          <button
+            onClick={() => {
+              logout();
+              if (setIsOpen) setIsOpen(false);
+            }}
+            className="flex md:hidden w-full items-center px-6 py-3 text-sm transition-colors group border-l-4 text-muted-foreground border-transparent hover:bg-red-50 hover:text-red-600 hover:border-red-500"
+          >
+            <LogOut className="mr-3 h-5 w-5 text-muted-foreground group-hover:text-red-500" />
+            Keluar
+          </button>
         </nav>
 
-        {/* User Profile Footer */}
-        <div className="p-5 border-t border-border bg-background mt-auto shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 bg-primary flex items-center justify-center text-white font-bold shrink-0">
-              {user?.name.charAt(0).toUpperCase() || 'U'}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-foreground truncate">{user?.name || "Admin IPNU"}</p>
-              <p className="text-xs font-medium text-muted-foreground truncate">{user?.email || "admin@ipnuloteng.or.id"}</p>
-            </div>
-          </div>
-        </div>
       </aside>
     </>
   );

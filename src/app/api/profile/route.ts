@@ -11,15 +11,10 @@ export async function GET() {
       orderBy: { order: 'asc' }
     });
 
-    const pengurus = await prisma.pengurus.findMany({
-      orderBy: { order: 'asc' }
-    });
-
     return NextResponse.json({
       status: 'success',
       profile: profile || null,
-      pilars: pilars,
-      pengurus: pengurus
+      pilars: pilars
     });
   } catch (error: any) {
     console.error('Error fetching profile:', error);
@@ -30,19 +25,22 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { sejarahText, sejarahImageUrl, arahGerak, pengurus } = body;
+    const { sejarahText, sejarahImageUrl, arahGerak, heroImage1, heroImage2, heroImage3 } = body;
 
     // 1. Upsert Profile
+    const updateData: any = {};
+    if (sejarahText !== undefined) updateData.sejarah_text = sejarahText;
+    if (sejarahImageUrl !== undefined) updateData.sejarah_image = sejarahImageUrl;
+    if (heroImage1 !== undefined) updateData.hero_image_1 = heroImage1;
+    if (heroImage2 !== undefined) updateData.hero_image_2 = heroImage2;
+    if (heroImage3 !== undefined) updateData.hero_image_3 = heroImage3;
+
     const profile = await prisma.profile.upsert({
       where: { id: 1 },
-      update: {
-        sejarah_text: sejarahText,
-        sejarah_image: sejarahImageUrl
-      },
+      update: updateData,
       create: {
         id: 1,
-        sejarah_text: sejarahText,
-        sejarah_image: sejarahImageUrl
+        ...updateData
       }
     });
 
@@ -67,28 +65,7 @@ export async function POST(request: Request) {
       }
     }
 
-    // 3. Sync Pengurus
-    if (Array.isArray(pengurus)) {
-      // Delete existing
-      await prisma.pengurus.deleteMany();
-      
-      // Create new
-      if (pengurus.length > 0) {
-        await Promise.all(
-          pengurus.map((item: any, index: number) => 
-            prisma.pengurus.create({
-              data: {
-                nama: item.nama || '',
-                jabatan: item.jabatan || '',
-                tier: parseInt(item.tier) || 3,
-                foto: item.fotoUrl || null,
-                order: index
-              }
-            })
-          )
-        );
-      }
-    }
+
 
     return NextResponse.json({ status: 'success', message: 'Profile updated successfully' });
   } catch (error) {

@@ -12,12 +12,6 @@ export const revalidate = 60;
 
 export default async function ProfilPage() {
   const profile = await prisma.profile.findUnique({ where: { id: 1 } });
-  const pilars = await prisma.pilar.findMany({ orderBy: { order: 'asc' } });
-  const pengurusList = await prisma.pengurus.findMany({ orderBy: { order: 'asc' } });
-
-  const ketua = pengurusList.filter(p => p.tier === 1);
-  const wakilKetua = pengurusList.filter(p => p.tier === 2);
-  const sekBen = pengurusList.filter(p => p.tier === 3);
   return (
     <MainLayout>
       {/* HERO SECTION */}
@@ -116,98 +110,6 @@ export default async function ProfilPage() {
             ) : (
               <div className="col-span-3 text-center py-12 text-muted-foreground">Belum ada pilar arah gerak.</div>
             )}
-          </div>
-        </section>
-
-        {/* Struktur Organisasi */}
-        <section className="py-8 pb-16">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Struktur <span className="font-semibold">Organisasi</span></h2>
-            <p className="text-muted-foreground text-lg">Pimpinan Cabang IPNU Lombok Tengah Masa Khidmat 2026-2028</p>
-          </div>
-          
-          <div className="max-w-5xl mx-auto space-y-12">
-            
-            {/* Tier 1: Ketua */}
-            {ketua.length > 0 && (
-              <div className="flex justify-center flex-wrap gap-8">
-                {ketua.map(k => (
-                  <div key={k.id} className="w-full max-w-xs">
-                    <Card className="text-center border-border/60 hover:border-primary/30 transition-all duration-300 group rounded-lg">
-                      <CardContent className="pt-8 pb-6 px-6">
-                        {k.foto ? (
-                          <div className="w-32 h-32 rounded-lg mx-auto mb-5 overflow-hidden border border-primary/20">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={k.foto} alt={k.nama} className="w-full h-full object-cover" />
-                          </div>
-                        ) : (
-                          <div className="w-32 h-32 bg-primary/5 rounded-lg mx-auto mb-5 border border-primary/20 flex items-center justify-center group-hover:bg-primary/10 group-hover:border-primary/40 transition-all duration-300">
-                            <span className="text-3xl font-bold text-primary/80 group-hover:text-primary transition-colors tracking-widest">
-                              {k.nama.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
-                            </span>
-                          </div>
-                        )}
-                        <h3 className="font-bold text-xl text-foreground mb-1">{k.nama}</h3>
-                        <Badge className="bg-primary/10 hover:bg-primary/20 border-none font-semibold text-primary">{k.jabatan}</Badge>
-                      </CardContent>
-                    </Card>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Tier 2: Wakil Ketua */}
-            {wakilKetua.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
-                {wakilKetua.map(w => (
-                  <Card key={w.id} className="text-center border-border/50 hover:border-primary/30 transition-all duration-300 group">
-                    <CardContent className="pt-8 pb-6 px-6">
-                      {w.foto ? (
-                        <div className="w-24 h-24 rounded-lg mx-auto mb-5 overflow-hidden border border-primary/20">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={w.foto} alt={w.nama} className="w-full h-full object-cover" />
-                        </div>
-                      ) : (
-                        <div className="w-24 h-24 bg-primary/5 rounded-lg mx-auto mb-5 border border-primary/20 flex items-center justify-center group-hover:bg-primary/10 group-hover:border-primary/40 transition-all duration-300 text-on-primary">
-                          <span className="text-2xl font-bold text-primary/80 group-hover:text-primary transition-colors tracking-widest">
-                            {w.nama.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
-                          </span>
-                        </div>
-                      )}
-                      <h3 className="font-bold text-lg text-foreground mb-1">{w.nama}</h3>
-                      <p className="text-sm font-medium text-muted-foreground">{w.jabatan}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-
-            {/* Tier 3: Sekretaris & Bendahara dkk */}
-            {sekBen.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {sekBen.map(s => (
-                  <Card key={s.id} className="text-center border-border/40 hover:border-primary/30 transition-all duration-300 group">
-                    <CardContent className="pt-6 pb-5 px-4">
-                      {s.foto ? (
-                        <div className="w-24 h-24 rounded-lg mx-auto mb-5 overflow-hidden border border-primary/20">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={s.foto} alt={s.nama} className="w-full h-full object-cover" />
-                        </div>
-                      ) : (
-                        <div className="w-24 h-24 bg-primary/5 rounded-lg mx-auto mb-5 border border-primary/20 flex items-center justify-center group-hover:bg-primary/10 group-hover:border-primary/40 transition-all duration-300 text-on-primary">
-                          <span className="text-2xl font-bold text-primary/80 group-hover:text-primary transition-colors tracking-widest">
-                            {s.nama.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
-                          </span>
-                        </div>
-                      )}
-                      <h3 className="font-bold text-base text-foreground mb-1 line-clamp-1">{s.nama}</h3>
-                      <p className="text-xs font-medium text-muted-foreground">{s.jabatan}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-
           </div>
         </section>
       </div>

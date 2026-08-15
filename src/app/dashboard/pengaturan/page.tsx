@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "@/lib/axios";
 import { Button } from "@/components/ui/button";
 import { User, Lock, Save, LayoutGrid, Link2, Image as ImageIcon, Trash2 } from "lucide-react";
 import { useSite } from "@/contexts/SiteContext";
@@ -10,6 +11,30 @@ export default function PengaturanPage() {
   const { logoUrl, setLogoUrl } = useSite();
   const [previewLogo, setPreviewLogo] = useState<string | null>(logoUrl);
   const [activeTab, setActiveTab] = useState<'profil' | 'web' | 'keamanan'>('profil');
+
+  // Hero Images State
+  const [heroImage1Url, setHeroImage1Url] = useState("");
+  const [heroImage2Url, setHeroImage2Url] = useState("");
+  const [heroImage3Url, setHeroImage3Url] = useState("");
+  const [heroImage1File, setHeroImage1File] = useState<File | null>(null);
+  const [heroImage2File, setHeroImage2File] = useState<File | null>(null);
+  const [heroImage3File, setHeroImage3File] = useState<File | null>(null);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const res = await axios.get("/api/profile");
+        if (res.data.profile) {
+          setHeroImage1Url(res.data.profile.hero_image_1 || "");
+          setHeroImage2Url(res.data.profile.hero_image_2 || "");
+          setHeroImage3Url(res.data.profile.hero_image_3 || "");
+        }
+      } catch (error) {
+        console.error("Error fetching settings:", error);
+      }
+    };
+    fetchSettings();
+  }, []);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -22,15 +47,52 @@ export default function PengaturanPage() {
     }
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simulasi penyimpanan dan pembaruan konteks
-    setTimeout(() => {
+    
+    try {
+      // 1. Upload new hero images if any
+      let finalHero1 = heroImage1Url;
+      let finalHero2 = heroImage2Url;
+      let finalHero3 = heroImage3Url;
+
+      const uploadImage = async (file: File) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        const res = await axios.post("/api/upload", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        return res.data.url;
+      };
+
+      if (heroImage1File) finalHero1 = await uploadImage(heroImage1File);
+      if (heroImage2File) finalHero2 = await uploadImage(heroImage2File);
+      if (heroImage3File) finalHero3 = await uploadImage(heroImage3File);
+
+      // 2. Update Profile DB
+      await axios.post("/api/profile", {
+        heroImage1: finalHero1,
+        heroImage2: finalHero2,
+        heroImage3: finalHero3,
+      });
+
+      // 3. Update Context
       setLogoUrl(previewLogo);
-      setLoading(false);
+      setHeroImage1Url(finalHero1);
+      setHeroImage2Url(finalHero2);
+      setHeroImage3Url(finalHero3);
+      setHeroImage1File(null);
+      setHeroImage2File(null);
+      setHeroImage3File(null);
+
       alert("Pengaturan berhasil disimpan!");
-    }, 1000);
+    } catch (error) {
+      console.error("Error saving settings:", error);
+      alert("Gagal menyimpan pengaturan.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -247,6 +309,98 @@ export default function PengaturanPage() {
                     </div>
                   </div>
                 </div>
+
+                {/* Card 4: Foto Hero Homepage */}
+                <div className="bg-surface-container-lowest rounded-lg border border-outline-variant hover:border-primary transition-colors overflow-hidden mt-8">
+                  <div className="border-b border-outline-variant bg-surface-container-low p-6">
+                    <h2 className="text-lg font-bold text-on-surface flex items-center">
+                      <ImageIcon className="w-5 h-5 mr-2 text-primary" />
+                      Foto Hero Halaman Utama
+                    </h2>
+                    <p className="text-xs text-on-surface-variant mt-1 font-medium">Tiga foto ini akan ditampilkan pada bagian hero (paling atas) di halaman utama website.</p>
+                  </div>
+                  <div className="p-6 sm:p-8 space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      
+                      {/* Foto Hero 1 */}
+                      <div className="space-y-3">
+                        <label className="text-sm font-bold text-on-surface">Foto Utama (Besar Kiri)</label>
+                        <div className="relative group cursor-pointer w-full">
+                          {(heroImage1Url || heroImage1File) ? (
+                            <div className="w-full h-40 rounded-lg overflow-hidden border border-outline-variant relative bg-surface-container-low">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={heroImage1File ? URL.createObjectURL(heroImage1File) : heroImage1Url} alt="Hero 1" className="w-full h-full object-cover" />
+                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <label className="text-white cursor-pointer px-3 py-1 bg-black/50 rounded-md text-xs font-medium">
+                                  Ubah Foto
+                                  <input type="file" accept="image/*" className="hidden" onChange={(e) => { if(e.target.files?.[0]) setHeroImage1File(e.target.files[0]) }} />
+                                </label>
+                              </div>
+                            </div>
+                          ) : (
+                            <label className="w-full h-40 rounded-lg border border-dashed border-outline-variant flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors cursor-pointer">
+                              <ImageIcon className="h-6 w-6 mb-2" />
+                              <span className="text-xs font-medium">Upload Foto 1</span>
+                              <input type="file" accept="image/*" className="hidden" onChange={(e) => { if(e.target.files?.[0]) setHeroImage1File(e.target.files[0]) }} />
+                            </label>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Foto Hero 2 */}
+                      <div className="space-y-3">
+                        <label className="text-sm font-bold text-on-surface">Foto 2 (Kanan Atas)</label>
+                        <div className="relative group cursor-pointer w-full">
+                          {(heroImage2Url || heroImage2File) ? (
+                            <div className="w-full h-40 rounded-lg overflow-hidden border border-outline-variant relative bg-surface-container-low">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={heroImage2File ? URL.createObjectURL(heroImage2File) : heroImage2Url} alt="Hero 2" className="w-full h-full object-cover" />
+                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <label className="text-white cursor-pointer px-3 py-1 bg-black/50 rounded-md text-xs font-medium">
+                                  Ubah Foto
+                                  <input type="file" accept="image/*" className="hidden" onChange={(e) => { if(e.target.files?.[0]) setHeroImage2File(e.target.files[0]) }} />
+                                </label>
+                              </div>
+                            </div>
+                          ) : (
+                            <label className="w-full h-40 rounded-lg border border-dashed border-outline-variant flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors cursor-pointer">
+                              <ImageIcon className="h-6 w-6 mb-2" />
+                              <span className="text-xs font-medium">Upload Foto 2</span>
+                              <input type="file" accept="image/*" className="hidden" onChange={(e) => { if(e.target.files?.[0]) setHeroImage2File(e.target.files[0]) }} />
+                            </label>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Foto Hero 3 */}
+                      <div className="space-y-3">
+                        <label className="text-sm font-bold text-on-surface">Foto 3 (Kanan Bawah)</label>
+                        <div className="relative group cursor-pointer w-full">
+                          {(heroImage3Url || heroImage3File) ? (
+                            <div className="w-full h-40 rounded-lg overflow-hidden border border-outline-variant relative bg-surface-container-low">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={heroImage3File ? URL.createObjectURL(heroImage3File) : heroImage3Url} alt="Hero 3" className="w-full h-full object-cover" />
+                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <label className="text-white cursor-pointer px-3 py-1 bg-black/50 rounded-md text-xs font-medium">
+                                  Ubah Foto
+                                  <input type="file" accept="image/*" className="hidden" onChange={(e) => { if(e.target.files?.[0]) setHeroImage3File(e.target.files[0]) }} />
+                                </label>
+                              </div>
+                            </div>
+                          ) : (
+                            <label className="w-full h-40 rounded-lg border border-dashed border-outline-variant flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors cursor-pointer">
+                              <ImageIcon className="h-6 w-6 mb-2" />
+                              <span className="text-xs font-medium">Upload Foto 3</span>
+                              <input type="file" accept="image/*" className="hidden" onChange={(e) => { if(e.target.files?.[0]) setHeroImage3File(e.target.files[0]) }} />
+                            </label>
+                          )}
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
               </div>
             )}
 

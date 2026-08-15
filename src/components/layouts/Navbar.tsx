@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSite } from "@/contexts/SiteContext";
@@ -63,6 +63,38 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
+          
+          <div className="relative group">
+            <button className={cn(
+              "px-4 py-2 rounded-lg transition-colors flex items-center gap-1",
+              pathname.startsWith("/pengurus") || pathname.startsWith("/pac")
+                ? "text-primary font-semibold bg-primary/8"
+                : "text-foreground/70 hover:text-foreground hover:bg-muted"
+            )}>
+              Direktori
+              <ChevronDown className="w-4 h-4" />
+            </button>
+            <div className="absolute top-full right-0 mt-1 w-48 bg-surface-container-lowest rounded-xl shadow-lg border border-outline-variant opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2 flex flex-col z-50">
+              <Link 
+                href="/pengurus" 
+                className={cn(
+                  "px-4 py-2.5 text-sm transition-colors",
+                  pathname.startsWith("/pengurus") ? "bg-primary/5 text-primary font-semibold" : "text-on-surface hover:bg-surface-container-low"
+                )}
+              >
+                Pengurus PC
+              </Link>
+              <Link 
+                href="/pac" 
+                className={cn(
+                  "px-4 py-2.5 text-sm transition-colors",
+                  pathname.startsWith("/pac") ? "bg-primary/5 text-primary font-semibold" : "text-on-surface hover:bg-surface-container-low"
+                )}
+              >
+                Direktori PAC
+              </Link>
+            </div>
+          </div>
         </nav>
 
         {/* Mobile Menu Toggle */}
@@ -137,7 +169,19 @@ export function Navbar() {
 
           <div className="h-px w-full bg-border my-3" />
 
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3 px-3">Layanan</p>
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3 px-3">Direktori</p>
+          <Link
+            href="/pengurus"
+            onClick={() => setIsOpen(false)}
+            className={cn(
+              "flex items-center min-h-[48px] px-3 rounded-lg text-sm font-medium transition-colors border-l-4",
+              pathname.startsWith("/pengurus")
+                ? "bg-primary/10 text-primary font-semibold border-primary"
+                : "text-foreground hover:bg-muted border-transparent"
+            )}
+          >
+            Pengurus PC
+          </Link>
           <Link
             href="/pac"
             onClick={() => setIsOpen(false)}

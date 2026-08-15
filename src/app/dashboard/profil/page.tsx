@@ -11,6 +11,7 @@ import {
   Save, 
   Plus, 
   Trash2, 
+  ArrowUp,
   ArrowDown,
   Image as ImageIcon,
   Edit
@@ -18,7 +19,7 @@ import {
 
 export default function ProfilOrganisasiPage() {
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'sejarah' | 'arah-gerak' | 'pengurus'>('sejarah');
+  const [activeTab, setActiveTab] = useState<'sejarah' | 'arah-gerak'>('sejarah');
 
   // State Mock Data
   const [sejarahText, setSejarahText] = useState("Ikatan Pelajar Nahdlatul Ulama (IPNU) didirikan secara resmi pada tanggal 24 Februari 1954 (20 Jumadil Akhir 1373 H) di Semarang, Jawa Tengah. Lahirnya IPNU diprakarsai pada saat pelaksanaan Konferensi Besar Lembaga Pendidikan Ma'arif NU.\n\nSebelum IPNU berdiri, telah banyak bermunculan perkumpulan pelajar berhaluan Ahlussunnah wal Jamaah yang bersifat kedaerahan, seperti Tsamrotul Mustafidin (Surabaya), Persano, dan PAMNO (Malang). Keinginan kuat untuk menyatukan seluruh potensi pelajar secara nasional inilah yang mendorong tokoh-tokoh pelopor seperti M. Shufyan Cholil, H. Musthafa, dan Prof. Dr. KH. M. Tolchah Mansoer (Ketua Umum Pertama) untuk mendirikan wadah bernama IPNU.\n\nDi Kabupaten Lombok Tengah, IPNU terus mengepakkan sayapnya sebagai Badan Otonom (Banom) NU yang mengayomi dan membina ribuan pelajar, santri, serta mahasiswa putra, demi mewujudkan generasi yang berilmu, berakhlakul karimah, dan tangguh di era modern.");
@@ -51,18 +52,6 @@ export default function ProfilOrganisasiPage() {
         } else {
           setArahGerak([]);
         }
-        if (data.pengurus && data.pengurus.length > 0) {
-          setPengurus(data.pengurus.map((p: any) => ({
-            id: p.id,
-            nama: p.nama,
-            jabatan: p.jabatan,
-            tier: p.tier.toString(),
-            foto: null,
-            fotoUrl: p.foto || ""
-          })));
-        } else {
-          setPengurus([]);
-        }
       } catch (error) {
         console.error("Error fetching profile data", error);
       }
@@ -87,30 +76,10 @@ export default function ProfilOrganisasiPage() {
         setSejarahImageUrl(finalSejarahUrl);
         setSejarahImage(null);
       }
-
-      const finalPengurus = await Promise.all(
-        pengurus.map(async (p) => {
-          let finalUrl = p.fotoUrl;
-          if (p.foto) {
-            const formData = new FormData();
-            formData.append("file", p.foto);
-            const res = await axios.post("/api/upload", formData, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            });
-            finalUrl = res.data.url;
-          }
-          return { ...p, fotoUrl: finalUrl, foto: null };
-        })
-      );
-      setPengurus(finalPengurus);
-
       await axios.post("/api/profile", {
         sejarahText,
         sejarahImageUrl: finalSejarahUrl,
         arahGerak,
-        pengurus: finalPengurus,
       });
 
       alert("Data profil organisasi berhasil disimpan!");
@@ -142,33 +111,13 @@ export default function ProfilOrganisasiPage() {
     }
   };
 
-  const addPengurus = () => {
-    setPengurus([{ id: Date.now(), nama: "", jabatan: "", tier: "3", foto: null, fotoUrl: "" }, ...pengurus]);
-  };
-
-  const removePengurus = (id: number) => {
-    setPengurus(pengurus.filter(item => item.id !== id));
-  };
-
-  const movePengurus = (index: number, direction: 'up' | 'down') => {
-    if (direction === 'up' && index > 0) {
-      const newArr = [...pengurus];
-      [newArr[index - 1], newArr[index]] = [newArr[index], newArr[index - 1]];
-      setPengurus(newArr);
-    } else if (direction === 'down' && index < pengurus.length - 1) {
-      const newArr = [...pengurus];
-      [newArr[index + 1], newArr[index]] = [newArr[index], newArr[index + 1]];
-      setPengurus(newArr);
-    }
-  };
-
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl mx-auto">
       {/* Header Section */}
       <div className="bg-surface-container-lowest p-6 sm:p-8 rounded-lg border border-outline-variant flex justify-between items-center">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-on-surface">Profil & Pengurus</h1>
-          <p className="text-sm text-on-surface-variant mt-1 font-medium">Kelola informasi sejarah, arah gerak, dan struktur kepengurusan IPNU Loteng.</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-on-surface">Profil Organisasi</h1>
+          <p className="text-sm text-on-surface-variant mt-1 font-medium">Kelola informasi sejarah dan arah gerak IPNU Loteng.</p>
         </div>
       </div>
 
@@ -191,14 +140,6 @@ export default function ProfilOrganisasiPage() {
           >
             <Target className="w-4 h-4 mr-3" />
             Arah Gerak
-          </button>
-          <button 
-            type="button"
-            onClick={() => setActiveTab('pengurus')}
-            className={`${activeTab === 'pengurus' ? 'bg-[#EEF7F2] text-primary border-b-[3px] lg:border-b-0 lg:border-l-[3px] border-primary' : 'text-on-surface-variant border-b-[3px] lg:border-b-0 lg:border-l-[3px] border-transparent hover:bg-[#F5F7F8] hover:text-on-surface'} font-bold px-4 py-3 flex items-center justify-start cursor-pointer transition-colors rounded-lg whitespace-nowrap w-full text-left`}
-          >
-            <Users className="w-4 h-4 mr-3" />
-            Susunan Pengurus
           </button>
         </div>
 
@@ -364,172 +305,6 @@ export default function ProfilOrganisasiPage() {
                   {arahGerak.length === 0 && (
                     <div className="text-center py-8 text-on-surface-variant text-sm border border-outline-variant bg-surface-container-low border-dashed">
                       Belum ada pilar arah gerak. Silakan tambahkan.
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* TAB PENGURUS */}
-            {activeTab === 'pengurus' && (
-              <div className="bg-surface-container-lowest rounded-lg border border-outline-variant hover:border-primary transition-colors overflow-hidden animate-in fade-in duration-300">
-                <div className="border-b border-outline-variant bg-surface-container-low p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center">
-                  <div>
-                    <h2 className="text-lg font-bold text-on-surface flex items-center">
-                      <Users className="w-5 h-5 mr-2 text-primary" />
-                      Susunan Pengurus
-                    </h2>
-                    <p className="text-xs text-on-surface-variant mt-1">Data pengurus yang tampil di halaman profil publik.</p>
-                  </div>
-                  <Button type="button" onClick={addPengurus} variant="outline" className="w-full sm:w-auto rounded-lg h-9 text-xs font-bold border-primary text-primary hover:bg-[#EEF7F2] mt-4 sm:mt-0">
-                    <Plus className="w-3 h-3 mr-1" /> Tambah Pengurus
-                  </Button>
-                </div>
-                <div className="p-6 sm:p-8 space-y-4">
-                  {pengurus.map((item, index) => (
-                    <div key={item.id} className="flex flex-col sm:flex-row gap-6 p-5 border border-outline-variant bg-surface-container-low items-center sm:items-start relative group">
-                      
-                      {/* Photo Placeholder */}
-                      <div className="w-20 h-20 bg-surface-container-lowest border border-outline-variant flex flex-col items-center justify-center shrink-0 mx-auto sm:mx-0 relative overflow-hidden group/foto rounded-lg">
-                        {(item.foto || item.fotoUrl) ? (
-                          <>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img 
-                              src={item.foto ? URL.createObjectURL(item.foto) : item.fotoUrl} 
-                              alt={item.nama} 
-                              className="w-full h-full object-cover" 
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-100 transition-opacity duration-300" />
-                            <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 opacity-100 transition-opacity duration-300 z-10">
-                              <label className="bg-surface-container-lowest/90 backdrop-blur-sm text-[#0d631b] hover:text-white hover:bg-[#0d631b] p-1.5 rounded border border-outline-variant transition-all duration-300 cursor-pointer">
-                                <Edit className="w-3 h-3" />
-                                <input 
-                                  type="file" 
-                                  accept="image/*"
-                                  className="hidden"
-                                  onChange={(e) => {
-                                    if (e.target.files && e.target.files[0]) {
-                                      const newArr = [...pengurus];
-                                      newArr[index].foto = e.target.files[0];
-                                      setPengurus(newArr);
-                                    }
-                                  }}
-                                />
-                              </label>
-                              <button 
-                                type="button"
-                                onClick={() => {
-                                  const newArr = [...pengurus];
-                                  newArr[index].foto = null;
-                                  newArr[index].fotoUrl = "";
-                                  setPengurus(newArr);
-                                }}
-                                className="bg-surface-container-lowest/90 backdrop-blur-sm text-[#da1e28] hover:text-white hover:bg-[#da1e28] p-1.5 rounded border border-outline-variant transition-all duration-300 cursor-pointer"
-                              >
-                                <Trash2 className="w-3 h-3" />
-                              </button>
-                            </div>
-                          </>
-                        ) : (
-                          <label className="w-full h-full flex flex-col items-center justify-center cursor-pointer hover:bg-[#F3F4F6] transition-colors">
-                            <ImageIcon className="w-6 h-6 text-[#9CA3AF] mb-1" />
-                            <span className="text-[10px] font-bold text-[#9CA3AF]">FOTO</span>
-                            <input 
-                              type="file" 
-                              accept="image/*"
-                              className="hidden"
-                              onChange={(e) => {
-                                if (e.target.files && e.target.files[0]) {
-                                  const newArr = [...pengurus];
-                                  newArr[index].foto = e.target.files[0];
-                                  setPengurus(newArr);
-                                }
-                              }}
-                            />
-                          </label>
-                        )}
-                      </div>
-
-                      <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
-                        <div className="space-y-1">
-                          <label className="text-[10px] font-bold text-on-surface-variant uppercase">Nama Lengkap</label>
-                          <input 
-                            type="text" 
-                            value={item.nama}
-                            onChange={(e) => {
-                              const newArr = [...pengurus];
-                              newArr[index].nama = e.target.value;
-                              setPengurus(newArr);
-                            }}
-                            placeholder="Cth: M. Abdul Ghafur"
-                            className="w-full px-3 py-2 border border-outline rounded-lg focus:ring-1 focus:ring-[#0F6D46] focus:outline-none text-sm font-bold text-on-surface bg-surface-container-lowest"
-                          />
-                        </div>
-                        <div className="space-y-1">
-                          <label className="text-[10px] font-bold text-on-surface-variant uppercase">Jabatan</label>
-                          <input 
-                            type="text" 
-                            value={item.jabatan}
-                            onChange={(e) => {
-                              const newArr = [...pengurus];
-                              newArr[index].jabatan = e.target.value;
-                              setPengurus(newArr);
-                            }}
-                            placeholder="Cth: Ketua Umum"
-                            className="w-full px-3 py-2 border border-outline rounded-lg focus:ring-1 focus:ring-[#0F6D46] focus:outline-none text-sm font-medium bg-surface-container-lowest text-on-surface-variant"
-                          />
-                        </div>
-                        <div className="space-y-1">
-                          <label className="text-[10px] font-bold text-on-surface-variant uppercase">Tingkat Hirarki</label>
-                          <select 
-                            value={item.tier}
-                            onChange={(e) => {
-                              const newArr = [...pengurus];
-                              newArr[index].tier = e.target.value;
-                              setPengurus(newArr);
-                            }}
-                            className="w-full px-3 py-2 border border-outline rounded-lg focus:ring-1 focus:ring-[#0F6D46] focus:outline-none text-sm font-medium bg-surface-container-lowest text-on-surface-variant"
-                          >
-                            <option value="1">Tier 1 (Ketua - Tampil Besar)</option>
-                            <option value="2">Tier 2 (Wakil - 2 Kolom)</option>
-                            <option value="3">Tier 3 (Sek/Ben - 3 Kolom)</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div className="absolute top-3 right-3 flex gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                        <button 
-                          type="button" 
-                          onClick={() => movePengurus(index, 'up')}
-                          disabled={index === 0}
-                          className="text-on-surface-variant hover:text-primary disabled:opacity-30 disabled:hover:text-on-surface-variant p-1.5 bg-surface-container-lowest border border-outline-variant hover:bg-[#EEF7F2]"
-                          title="Pindah ke Atas"
-                        >
-                          <ArrowUp className="w-4 h-4" />
-                        </button>
-                        <button 
-                          type="button" 
-                          onClick={() => movePengurus(index, 'down')}
-                          disabled={index === pengurus.length - 1}
-                          className="text-on-surface-variant hover:text-primary disabled:opacity-30 disabled:hover:text-on-surface-variant p-1.5 bg-surface-container-lowest border border-outline-variant hover:bg-[#EEF7F2]"
-                          title="Pindah ke Bawah"
-                        >
-                          <ArrowDown className="w-4 h-4" />
-                        </button>
-                        <button 
-                          type="button" 
-                          onClick={() => removePengurus(item.id)}
-                          className="text-on-surface-variant hover:text-[#da1e28] p-1.5 bg-surface-container-lowest border border-outline-variant hover:bg-[#FFF1F1] ml-2"
-                          title="Hapus Data Pengurus"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                  {pengurus.length === 0 && (
-                    <div className="text-center py-8 text-on-surface-variant text-sm border border-outline-variant bg-surface-container-low border-dashed">
-                      Belum ada data pengurus. Silakan klik Tambah Pengurus.
                     </div>
                   )}
                 </div>

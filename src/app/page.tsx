@@ -13,46 +13,56 @@ import {
 export const revalidate = 60;
 
 export default async function Home() {
-  // ─── Ambil semua data dari Prisma (SINGLE SOURCE OF TRUTH) ───────────────
-  const [profile, beritaTerbaru, galeriTerbaru, statsData] = await Promise.all([
-    // 1. Profil organisasi (untuk foto sejarah di section "Tentang Kami")
-    prisma.profile.findUnique({ where: { id: 1 } }),
+  // ─── Ambil data dengan fallback jika DB tidak tersedia ─────────────────────
+  let profile = null;
+  let beritaTerbaru: any[] = [];
+  let galeriTerbaru: any[] = [];
+  let totalPAC = 0, totalPR = 0, totalPK = 0, totalAnggota = 0;
 
-    // 2. 3 berita published terbaru
-    prisma.berita.findMany({
-      where: { status: "published" },
-      orderBy: { createdAt: "desc" },
-      take: 3,
-    }),
+  try {
+    const [profileData, beritaData, galeriData, statsData] = await Promise.all([
+      prisma.profile.findUnique({ where: { id: 1 } }),
+      prisma.berita.findMany({
+        where: { status: "published" },
+        orderBy: { createdAt: "desc" },
+        take: 3,
+      }),
+      prisma.galeri.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 3,
+      }),
+      prisma.pAC.aggregate({
+        _count: { id: true },
+        _sum: { pr: true, pk: true, members: true },
+        where: { status: "Aktif" }
+      }),
+    ]);
 
-    // 3. 3 foto galeri terbaru
-    prisma.galeri.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 3,
-    }),
+    profile = profileData;
+    beritaTerbaru = beritaData;
+    galeriTerbaru = galeriData;
 
-    // 4. Statistik nyata dari database
-    Promise.all([
-      prisma.berita.count({ where: { status: "published" } }),
-      prisma.agenda.count({ where: { status: "completed" } }),
-      prisma.pengurus.count(),
-    ]),
-  ]);
-
-  const [totalBerita, agendaSelesai, totalPengurus] = statsData;
+    const pacAgg = statsData as any;
+    totalPAC = pacAgg?._count?.id || 0;
+    totalPR = pacAgg?._sum?.pr || 0;
+    totalPK = pacAgg?._sum?.pk || 0;
+    totalAnggota = pacAgg?._sum?.members || 0;
+  } catch (err) {
+    console.error("⚠️ Database tidak tersedia, halaman tampil dengan data kosong:", err);
+  }
 
   // ─── Susun stats dari data nyata ──────────────────────────────────────────
   const stats = [
-    { value: totalPengurus > 0 ? `${totalPengurus}+` : "—", label: "Pengurus Cabang" },
-    { value: agendaSelesai > 0 ? `${agendaSelesai}+` : "—", label: "Agenda Selesai" },
-    { value: totalBerita > 0 ? `${totalBerita}+` : "—", label: "Berita Publikasi" },
-    { value: "2026", label: "Tahun Khidmah" },
+    { value: totalPAC > 0 ? `${totalPAC}` : "—", label: "Pimpinan Anak Cabang" },
+    { value: totalPR > 0 ? `${totalPR}` : "—", label: "Pimpinan Ranting" },
+    { value: totalPK > 0 ? `${totalPK}` : "—", label: "Pimpinan Komisariat" },
+    { value: totalAnggota > 0 ? `${totalAnggota}+` : "—", label: "Anggota Aktif" },
   ];
 
   return (
     <MainLayout>
-      {/* Hero — teks + foto statis */}
-      <HeroSection />
+      {/* Hero — teks + kolase foto kegiatan */}
+      <HeroSection profile={profile} />
 
       {/* Stats — data real dari DB */}
       <StatsStrip stats={stats} />

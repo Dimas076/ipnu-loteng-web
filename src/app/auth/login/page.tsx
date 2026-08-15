@@ -51,28 +51,31 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen md:h-screen flex flex-col md:flex-row bg-background w-full">
       {/* KIRI: Visual/Branding (Sembunyi di Mobile) */}
-      <div className="hidden md:flex md:w-1/2 bg-primary text-white flex-col justify-between p-12 relative overflow-hidden">
+      <div className="hidden md:flex md:w-1/2 bg-primary text-white flex-col p-12 relative overflow-hidden">
         {/* Background Patterns */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:32px_32px]"></div>
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
 
-        <div className="relative z-10">
-          <Link href="/" className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors mb-16">
+        {/* Top Link */}
+        <div className="relative z-10 w-full">
+          <Link href="/" className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors">
             <ArrowLeft className="w-5 h-5" />
             <span className="font-medium">Kembali ke Beranda</span>
           </Link>
-          <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-primary font-bold text-3xl mb-8 shadow-xl">
-            IP
-          </div>
-          <h1 className="text-5xl font-extrabold tracking-tight leading-tight mb-6">
+        </div>
+
+        {/* Center Text */}
+        <div className="relative z-10 flex-1 flex flex-col justify-center text-left">
+          <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight mb-6">
             Selamat Datang <br /> Kembali.
           </h1>
-          <p className="text-xl text-white/80 max-w-md leading-relaxed font-medium">
+          <p className="text-lg lg:text-xl text-white/80 max-w-md leading-relaxed font-medium">
             Masuk ke Sistem Informasi Terpadu Pelajar Nahdlatul Ulama Kabupaten Lombok Tengah.
           </p>
         </div>
 
-        <div className="relative z-10">
+        {/* Bottom Text */}
+        <div className="relative z-10 w-full text-left">
           <p className="text-white/60 font-medium">© 2026 PC IPNU Lombok Tengah</p>
         </div>
       </div>
@@ -80,10 +83,7 @@ export default function LoginPage() {
       {/* KANAN: Form Login */}
       <div className="w-full md:w-1/2 flex-1 flex flex-col px-6 py-6 sm:px-10 sm:pb-6 lg:px-16 xl:px-24 relative bg-white md:overflow-y-auto">
         {/* Mobile Header (Hanya terlihat di Mobile) */}
-        <div className="md:hidden flex items-center justify-between mb-8">
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md">
-            IP
-          </div>
+        <div className="md:hidden flex items-center justify-end mb-8">
           <Link href="/" className="text-sm font-medium text-muted-foreground flex items-center gap-1">
             <ArrowLeft className="w-4 h-4" /> Beranda
           </Link>
