@@ -173,18 +173,17 @@ export default function AdminAgendaPage() {
                   <th className="p-4 font-bold text-foreground">Kategori</th>
                   <th className="p-4 font-bold text-foreground">Waktu & Tempat</th>
                   <th className="p-4 font-bold text-foreground">Status</th>
-                  <th className="p-4 font-bold text-foreground text-center">Peserta</th>
                   <th className="p-4 font-bold text-foreground text-right">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
                 {loading ? (
                   <tr>
-                    <td colSpan={6} className="p-8 text-center text-muted-foreground">Memuat data...</td>
+                    <td colSpan={5} className="p-8 text-center text-muted-foreground">Memuat data...</td>
                   </tr>
                 ) : agendas.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="p-8 text-center text-muted-foreground">Belum ada agenda</td>
+                    <td colSpan={5} className="p-8 text-center text-muted-foreground">Belum ada agenda</td>
                   </tr>
                 ) : (
                   agendas.map((agenda) => (
