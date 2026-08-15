@@ -228,8 +228,8 @@ export default function ProfilOrganisasiPage() {
                             alt="Preview Sejarah" 
                             className="w-full h-full object-cover" 
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-100 md:opacity-0 md:group-hover/foto:opacity-100 transition-opacity duration-300" />
-                          <div className="absolute top-2 right-2 flex gap-2 opacity-100 md:opacity-0 md:group-hover/foto:opacity-100 transition-all duration-300 translate-y-0 md:translate-y-2 md:group-hover/foto:translate-y-0 z-10">
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-100 transition-opacity duration-300" />
+                          <div className="absolute top-2 right-2 flex gap-2 opacity-100 transition-all duration-300 translate-y-0 z-10">
                             <label className="bg-surface-container-lowest/90 backdrop-blur-sm text-[#0d631b] hover:text-white hover:bg-[#0d631b] p-2 rounded-lg border border-outline-variant transition-all duration-300 cursor-pointer">
                               <Edit className="w-4 h-4" />
                               <input 
@@ -399,8 +399,8 @@ export default function ProfilOrganisasiPage() {
                               alt={item.nama} 
                               className="w-full h-full object-cover" 
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-100 md:opacity-0 md:group-hover/foto:opacity-100 transition-opacity duration-300" />
-                            <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 opacity-100 md:opacity-0 md:group-hover/foto:opacity-100 transition-opacity duration-300 z-10">
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-100 transition-opacity duration-300" />
+                            <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 opacity-100 transition-opacity duration-300 z-10">
                               <label className="bg-surface-container-lowest/90 backdrop-blur-sm text-[#0d631b] hover:text-white hover:bg-[#0d631b] p-1.5 rounded border border-outline-variant transition-all duration-300 cursor-pointer">
                                 <Edit className="w-3 h-3" />
                                 <input 
