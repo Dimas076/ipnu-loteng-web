@@ -186,12 +186,34 @@ export default function AgendaDetailPage() {
                 </ul>
 
                 <div className="pt-6 border-t border-outline-variant mt-2">
-                  <Link href={`/agenda/${slug}/daftar`} className="flex items-center justify-center w-full bg-primary hover:bg-primary-container text-white font-bold h-12 rounded-lg shadow-sm text-base transition-colors">
-                    Daftar Sekarang
-                  </Link>
-                  <p className="text-xs text-center text-on-surface-variant mt-3 font-medium">
-                    Kuota terbatas. Pendaftaran ditutup pada {new Date(agenda.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
-                  </p>
+                  {agenda.status === 'open' ? (
+                    <>
+                      <Link href={`/agenda/${slug}/daftar`} className="flex items-center justify-center w-full bg-primary hover:bg-primary-container text-white font-bold h-12 rounded-lg shadow-sm text-base transition-colors">
+                        Daftar Sekarang
+                      </Link>
+                      <p className="text-xs text-center text-on-surface-variant mt-3 font-medium">
+                        Pendaftaran akan ditutup pada {new Date(agenda.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+                      </p>
+                    </>
+                  ) : agenda.status === 'closed' ? (
+                    <>
+                      <button disabled className="flex items-center justify-center w-full bg-surface-variant text-on-surface-variant font-bold h-12 rounded-lg shadow-sm text-base opacity-70 cursor-not-allowed">
+                        Pendaftaran Ditutup
+                      </button>
+                      <p className="text-xs text-center text-on-surface-variant mt-3 font-medium">
+                        Mohon maaf, pendaftaran untuk agenda ini telah ditutup.
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <button disabled className="flex items-center justify-center w-full bg-surface-variant text-on-surface-variant font-bold h-12 rounded-lg shadow-sm text-base opacity-70 cursor-not-allowed">
+                        Agenda Telah Selesai
+                      </button>
+                      <p className="text-xs text-center text-on-surface-variant mt-3 font-medium">
+                        Terima kasih atas partisipasi Anda dalam agenda ini.
+                      </p>
+                    </>
+                  )}
                 </div>
 
               </div>

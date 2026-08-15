@@ -185,23 +185,24 @@ export default function AgendaPage() {
                             </span>
                             <div className="flex items-center text-xs font-semibold text-on-surface-variant">
                               <Clock className="w-4 h-4 mr-1 text-outline" />
-                              08:00 - 16:00 WITA
+                              {new Date(featuredEvent.date).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+                              {featuredEvent.endDate ? ` - ${new Date(featuredEvent.endDate).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}` : ' - Selesai'} WITA
                             </div>
                           </div>
                           <h3 className="text-xl md:text-2xl font-bold text-on-surface mb-3 line-clamp-2 leading-tight">
                             {featuredEvent.title}
                           </h3>
-                          <p className="text-on-surface-variant text-sm mb-5 line-clamp-2 leading-relaxed">
-                            {featuredEvent.description || "Masa Kesetiaan Anggota. Gerbang awal kaderisasi untuk membentuk anggota yang militan dan berwawasan kebangsaan."}
+                          <p className="text-on-surface-variant text-sm mb-5 line-clamp-2 leading-relaxed whitespace-pre-wrap">
+                            {featuredEvent.description || "Tidak ada deskripsi"}
                           </p>
                           <div className="flex items-start text-sm font-medium text-on-surface-variant mb-6 mt-auto">
                             <MapPin className="w-4 h-4 mr-2 text-outline shrink-0 mt-0.5" />
-                            <span className="line-clamp-2">{featuredEvent.location || "Gedung NU Center, Lombok Tengah"}</span>
+                            <span className="line-clamp-2">{featuredEvent.location || "Lokasi belum ditentukan"}</span>
                           </div>
                           <div className="flex flex-row gap-3">
-                            <Link href={`/agenda/${featuredEvent.id}/daftar`} className="flex-1">
-                              <Button className="w-full text-white font-semibold rounded-md h-10 border-0 bg-primary hover:bg-primary/90">
-                                Daftar Sekarang
+                            <Link href={`/agenda/${featuredEvent.id}/daftar`} className={`flex-1 ${featuredEvent.status !== 'open' ? 'pointer-events-none opacity-50' : ''}`}>
+                              <Button className="w-full text-white font-semibold rounded-md h-10 border-0 bg-primary hover:bg-primary/90" disabled={featuredEvent.status !== 'open'}>
+                                {featuredEvent.status === 'open' ? 'Daftar Sekarang' : featuredEvent.status === 'closed' ? 'Pendaftaran Ditutup' : 'Telah Selesai'}
                               </Button>
                             </Link>
                             <Link href={`/agenda/${featuredEvent.id}`} className="flex-1">
@@ -247,11 +248,12 @@ export default function AgendaPage() {
                             <div className="mt-auto space-y-2 mb-6">
                               <div className="flex items-center text-on-surface-variant text-xs md:text-sm">
                                 <Clock className="w-4 h-4 mr-2 text-outline shrink-0" />
-                                13:00 - Selesai
+                                {new Date(agenda.date).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+                                {agenda.endDate ? ` - ${new Date(agenda.endDate).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}` : ' - Selesai'} WITA
                               </div>
                               <div className="flex items-start text-on-surface-variant text-xs md:text-sm">
                                 <MapPin className="w-4 h-4 mr-2 text-outline shrink-0 mt-0.5" />
-                                <span className="line-clamp-1">{agenda.location || "Aula PCNU"}</span>
+                                <span className="line-clamp-1">{agenda.location || "Lokasi belum ditentukan"}</span>
                               </div>
                             </div>
                             
@@ -361,7 +363,8 @@ export default function AgendaPage() {
                           <Link href={`/agenda/${agenda.id}`} key={agenda.id} className="block pl-3 border-l-2 border-primary hover:bg-surface-container py-1.5 transition-colors rounded-r-md">
                             <p className="text-sm font-bold text-on-surface leading-tight mb-1">{agenda.title}</p>
                             <p className="text-xs text-on-surface-variant flex items-center">
-                              <Clock className="w-3 h-3 mr-1" /> {agenda.time || "08:00 WITA"}
+                              <Clock className="w-3 h-3 mr-1" /> 
+                              {new Date(agenda.date).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })} WITA
                             </p>
                           </Link>
                         ))
