@@ -47,10 +47,16 @@ export function GallerySlideshow({ images, title, category }: GallerySlideshowPr
 
       {/* Indikator foto */}
       {images.length > 1 && (
-        <div className="absolute top-2 right-2 bg-black/50 rounded-full px-2 py-1 flex gap-1 items-center z-10">
-          {images.map((_, i) => (
-             <div key={i} className={`w-1 h-1 rounded-full transition-colors ${i === currentIndex ? 'bg-white' : 'bg-white/40'}`} />
-          ))}
+        <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm rounded-full px-2 py-1 flex gap-1 items-center z-10">
+          {images.length <= 5 ? (
+            images.map((_, i) => (
+              <div key={i} className={`w-1.5 h-1.5 rounded-full transition-colors ${i === currentIndex ? 'bg-white' : 'bg-white/40'}`} />
+            ))
+          ) : (
+            <span className="text-[10px] text-white font-medium px-1 tracking-widest">
+              {currentIndex + 1} / {images.length}
+            </span>
+          )}
         </div>
       )}
     </div>
