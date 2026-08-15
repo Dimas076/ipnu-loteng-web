@@ -111,25 +111,27 @@ export default function AgendaDetailPage() {
             <div className="lg:col-span-8 flex flex-col gap-8">
               
               {/* Description */}
-              <article className="bg-surface-container-lowest rounded-xl p-6 md:p-8 border border-outline-variant shadow-sm">
-                <h2 className="text-xl md:text-2xl font-bold text-on-surface mb-6 flex items-center gap-3 border-b border-outline-variant pb-3">
-                  <Info className="w-6 h-6 text-primary" />
-                  Tentang Kegiatan
-                </h2>
-                <div className="text-on-surface-variant space-y-4 leading-relaxed whitespace-pre-wrap text-base md:text-lg">
-                  {agenda.description || <span className="italic text-muted-foreground">Tidak ada deskripsi untuk agenda ini.</span>}
-                </div>
-              </article>
+              {agenda.description && agenda.description.trim() !== "" && (
+                <article className="bg-surface-container-lowest rounded-xl p-6 md:p-8 border border-outline-variant shadow-sm">
+                  <h2 className="text-xl md:text-2xl font-bold text-on-surface mb-6 flex items-center gap-3 border-b border-outline-variant pb-3">
+                    <Info className="w-6 h-6 text-primary" />
+                    Tentang Kegiatan
+                  </h2>
+                  <div className="text-on-surface-variant space-y-4 leading-relaxed whitespace-pre-wrap text-base md:text-lg">
+                    {agenda.description}
+                  </div>
+                </article>
+              )}
 
               {/* Rundown Acara */}
-              {agenda.rundown && Array.isArray(agenda.rundown) && agenda.rundown.length > 0 && (
+              {agenda.rundown && Array.isArray(agenda.rundown) && agenda.rundown.filter((item: any) => item.time?.trim() || item.title?.trim()).length > 0 && (
                 <article className="bg-surface-container-lowest rounded-xl p-6 md:p-8 border border-outline-variant shadow-sm">
                   <h2 className="text-xl md:text-2xl font-bold text-on-surface mb-6 flex items-center gap-3 border-b border-outline-variant pb-3">
                     <CalendarClock className="w-6 h-6 text-primary" />
                     Rundown Acara
                   </h2>
                   <div className="space-y-3">
-                    {agenda.rundown.map((item: any, idx: number) => (
+                    {agenda.rundown.filter((item: any) => item.time?.trim() || item.title?.trim()).map((item: any, idx: number) => (
                       <div key={idx} className="flex gap-4 p-4 rounded-lg bg-surface-container-low border border-outline-variant hover:border-primary/30 transition-colors items-center">
                         <div className="w-28 shrink-0 font-bold text-primary text-sm md:text-base">
                           {item.time}
@@ -140,6 +142,16 @@ export default function AgendaDetailPage() {
                       </div>
                     ))}
                   </div>
+                </article>
+              )}
+
+              {/* Fallback Jika Keduanya Kosong */}
+              {(!agenda.description || agenda.description.trim() === "") && 
+               (!agenda.rundown || !Array.isArray(agenda.rundown) || agenda.rundown.filter((item: any) => item.time?.trim() || item.title?.trim()).length === 0) && (
+                <article className="bg-surface-container-lowest rounded-xl p-6 md:p-8 border border-outline-variant shadow-sm flex flex-col items-center justify-center text-center py-12">
+                  <Info className="w-12 h-12 text-outline mb-4" />
+                  <h3 className="text-lg font-bold text-on-surface mb-2">Informasi Belum Tersedia</h3>
+                  <p className="text-on-surface-variant">Detail tentang kegiatan dan rundown acara belum ditambahkan oleh panitia.</p>
                 </article>
               )}
 
