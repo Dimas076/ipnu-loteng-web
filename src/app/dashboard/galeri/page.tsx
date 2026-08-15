@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, Image as ImageIcon, CheckCircle2, Loader2 } from "lucide-react";
+import { Plus, Trash2, Edit, Image as ImageIcon, CheckCircle2, Loader2 } from "lucide-react";
 import axios from "@/lib/axios";
 
 interface GaleriPhoto {
@@ -20,6 +20,7 @@ export default function GaleriPage() {
   const [loading, setLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [editId, setEditId] = useState<number | null>(null);
 
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("Umum");
@@ -59,33 +60,41 @@ export default function GaleriPage() {
       alert("Judul foto wajib diisi.");
       return;
     }
-    if (selectedFiles.length === 0) {
+    if (!editId && selectedFiles.length === 0) {
       alert("Pilih minimal satu gambar terlebih dahulu.");
       return;
     }
 
     setSaving(true);
     try {
-      const imageUrls: string[] = [];
+      let imageUrlsStr = undefined;
 
-      for (const file of selectedFiles) {
-        const formData = new FormData();
-        formData.append("file", file);
-        const uploadRes = await axios.post("/api/upload", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        if (!uploadRes.data.success) throw new Error("Gagal upload gambar");
-        imageUrls.push(uploadRes.data.url);
+      if (selectedFiles.length > 0) {
+        const imageUrls: string[] = [];
+        for (const file of selectedFiles) {
+          const formData = new FormData();
+          formData.append("file", file);
+          const uploadRes = await axios.post("/api/upload", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+          if (!uploadRes.data.success) throw new Error("Gagal upload gambar");
+          imageUrls.push(uploadRes.data.url);
+        }
+        imageUrlsStr = imageUrls.join(",");
       }
 
-      // 2. Simpan ke database dengan URL dipisah koma
-      await axios.post("/api/galeri", { title, image: imageUrls.join(","), category });
+      if (editId) {
+        await axios.put(`/api/galeri/${editId}`, { title, category, image: imageUrlsStr });
+      } else {
+        await axios.post("/api/galeri", { title, image: imageUrlsStr, category });
+      }
 
-      // 3. Reset form & refresh
+      // Reset form & refresh
       setTitle("");
       setCategory("Umum");
       setSelectedFiles([]);
       setPreviewUrls([]);
+      setEditId(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
       setIsUploading(false);
       await fetchPhotos();
@@ -95,6 +104,27 @@ export default function GaleriPage() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleEdit = (photo: GaleriPhoto) => {
+    setEditId(photo.id);
+    setTitle(photo.title);
+    setCategory(photo.category);
+    setIsUploading(true);
+    setSelectedFiles([]);
+    setPreviewUrls([]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleCancel = () => {
+    setIsUploading(false);
+    setEditId(null);
+    setTitle("");
+    setCategory("Umum");
+    setSelectedFiles([]);
+    setPreviewUrls([]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleDelete = async (id: number) => {
@@ -118,14 +148,14 @@ export default function GaleriPage() {
           </p>
         </div>
         <Button
-          onClick={() => setIsUploading(!isUploading)}
+          onClick={isUploading || editId ? handleCancel : () => setIsUploading(true)}
           className={`rounded-lg transition-all font-bold px-6 ${
-            isUploading
+            isUploading || editId
               ? "bg-surface-container-low text-on-surface-variant hover:bg-[#E5E7EB] border border-outline-variant"
               : "bg-primary hover:bg-[#0B5A39] text-white"
           }`}
         >
-          {isUploading ? "Batal" : (<><Plus className="h-5 w-5 mr-2" />Unggah Foto</>)}
+          {isUploading || editId ? "Batal" : (<><Plus className="h-5 w-5 mr-2" />Unggah Foto</>)}
         </Button>
       </div>
 
@@ -133,7 +163,7 @@ export default function GaleriPage() {
       {isUploading && (
         <div className="bg-surface-container-lowest rounded-lg p-6 border border-outline-variant animate-in fade-in slide-in-from-top-4 duration-300">
           <div className="flex items-center gap-2 mb-6 text-primary font-bold text-sm">
-            <ImageIcon className="w-5 h-5" /> Form Unggah Foto
+            <ImageIcon className="w-5 h-5" /> {editId ? "Form Edit Galeri" : "Form Unggah Foto"}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
@@ -158,7 +188,7 @@ export default function GaleriPage() {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-on-surface">Pilih Gambar <span className="text-red-500">*</span></label>
+                <label className="text-sm font-bold text-on-surface">Pilih Gambar {!editId && <span className="text-red-500">*</span>} {editId && <span className="text-on-surface-variant font-normal">(Opsional)</span>}</label>
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -176,7 +206,7 @@ export default function GaleriPage() {
                 {saving ? (
                   <span className="flex items-center"><Loader2 className="w-5 h-5 mr-2 animate-spin" />Menyimpan...</span>
                 ) : (
-                  <span className="flex items-center"><CheckCircle2 className="w-5 h-5 mr-2" />Simpan ke Galeri</span>
+                  <span className="flex items-center"><CheckCircle2 className="w-5 h-5 mr-2" />{editId ? "Simpan Perubahan" : "Simpan ke Galeri"}</span>
                 )}
               </Button>
             </div>
@@ -238,12 +268,20 @@ export default function GaleriPage() {
                   </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300" />
-                <button
-                  onClick={() => handleDelete(photo.id)}
-                  className="absolute top-4 right-4 bg-surface-container-lowest/90 backdrop-blur-sm text-[#da1e28] hover:text-white hover:bg-[#da1e28] p-2.5 rounded-lg border border-outline-variant opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 translate-y-0 md:translate-y-2 md:group-hover:translate-y-0"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                <div className="absolute top-4 right-4 flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 translate-y-0 md:translate-y-2 md:group-hover:translate-y-0">
+                  <button
+                    onClick={() => handleEdit(photo)}
+                    className="bg-surface-container-lowest/90 backdrop-blur-sm text-[#0d631b] hover:text-white hover:bg-[#0d631b] p-2.5 rounded-lg border border-outline-variant transition-all duration-300"
+                  >
+                    <Edit className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(photo.id)}
+                    className="bg-surface-container-lowest/90 backdrop-blur-sm text-[#da1e28] hover:text-white hover:bg-[#da1e28] p-2.5 rounded-lg border border-outline-variant transition-all duration-300"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
               <div className="p-5 border-t border-outline-variant">
                 <div className="flex items-center justify-between mb-1">
