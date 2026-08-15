@@ -252,7 +252,7 @@ export function KabarTerbaru({ berita }: { berita: BeritaItem[] }) {
   if (berita.length === 0) return null;
 
   return (
-    <section className="py-12 md:py-16 bg-background">
+    <section className="py-12 md:py-16 bg-slate-50">
       <div className="container mx-auto px-4 max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
