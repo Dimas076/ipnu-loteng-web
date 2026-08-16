@@ -88,7 +88,7 @@ export default async function BeritaDetailPage({ params }: { params: Promise<{ s
 
         {/* Content */}
         <article 
-          className="prose prose-lg prose-slate max-w-none prose-a:text-primary hover:prose-a:text-primary/80"
+          className="prose prose-lg prose-slate max-w-none font-medium text-slate-800 leading-relaxed prose-a:text-primary hover:prose-a:text-primary/80 whitespace-pre-wrap"
           dangerouslySetInnerHTML={{ __html: berita.content }}
         />
         
