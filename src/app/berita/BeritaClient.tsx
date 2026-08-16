@@ -14,6 +14,7 @@ interface BeritaItem {
   excerpt?: string | null;
   image?: string | null;
   category?: string | null;
+  authorName?: string | null;
   createdAt: string;
 }
 
