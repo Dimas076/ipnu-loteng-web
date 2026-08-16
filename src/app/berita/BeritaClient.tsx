@@ -263,7 +263,15 @@ export function BeritaClient() {
                           <p className="text-sm md:text-base text-muted-foreground line-clamp-2 leading-relaxed mb-3">
                             {headline.excerpt || ""}
                           </p>
-                          <p className="text-xs text-muted-foreground font-medium">{formatDate(headline.createdAt)}</p>
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
+                            <span>{formatDate(headline.createdAt)}</span>
+                            {headline.authorName && (
+                              <>
+                                <span className="w-1 h-1 rounded-full bg-border" />
+                                <span>Oleh: {headline.authorName}</span>
+                              </>
+                            )}
+                          </div>
                         </Link>
                       )}
 
@@ -287,7 +295,15 @@ export function BeritaClient() {
                                 <h3 className="text-base md:text-lg font-bold text-foreground hover:text-primary transition-colors leading-snug line-clamp-3 md:line-clamp-2 mb-2">
                                   {news.title}
                                 </h3>
-                                <p className="text-[11px] text-muted-foreground font-medium">{formatDate(news.createdAt)}</p>
+                                <div className="flex items-center gap-2 text-[11px] text-muted-foreground font-medium">
+                                  <span>{formatDate(news.createdAt)}</span>
+                                  {news.authorName && (
+                                    <>
+                                      <span className="w-1 h-1 rounded-full bg-border" />
+                                      <span>Oleh: {news.authorName}</span>
+                                    </>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </Link>
@@ -308,7 +324,15 @@ export function BeritaClient() {
                               <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed hidden md:block mb-3">
                                 {news.excerpt || ""}
                               </p>
-                              <p className="text-[11px] md:text-xs text-muted-foreground font-medium">{formatDate(news.createdAt)}</p>
+                              <div className="flex items-center gap-2 text-[11px] md:text-xs text-muted-foreground font-medium">
+                                <span>{formatDate(news.createdAt)}</span>
+                                {news.authorName && (
+                                  <>
+                                    <span className="w-1 h-1 rounded-full bg-border" />
+                                    <span>Oleh: {news.authorName}</span>
+                                  </>
+                                )}
+                              </div>
                             </div>
                             <div className="w-28 h-28 md:w-48 md:h-32 rounded-lg bg-muted shrink-0 overflow-hidden relative border border-border/50">
                               {news.image ? (

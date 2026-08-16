@@ -31,7 +31,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     const { id: paramId } = await params;
     const id = parseInt(paramId);
     const body = await request.json();
-    const { title, content, status, image, category, excerpt } = body;
+    const { title, content, status, image, category, excerpt, authorName } = body;
 
     const post = await prisma.berita.update({
       where: { id },
@@ -42,6 +42,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         status: status || undefined,
         image: image !== undefined ? image : undefined,
         category: category || undefined,
+        authorName: authorName !== undefined ? authorName : undefined,
       }
     });
 

@@ -22,6 +22,7 @@ export default function EditBeritaPage() {
     image: "",
     category: "",
     status: "draft",
+    authorName: "",
   });
 
   useEffect(() => {
@@ -35,6 +36,7 @@ export default function EditBeritaPage() {
           image: post.image || "",
           category: post.category || "",
           status: post.status,
+          authorName: post.authorName || "",
         });
       } catch (err: any) {
         setError("Gagal mengambil data berita.");
@@ -237,6 +239,20 @@ export default function EditBeritaPage() {
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-outline rounded-lg focus:ring-1 focus:ring-[#0F6D46] focus:border-primary focus:outline-none transition-all text-sm bg-surface-container-lowest font-medium text-on-surface placeholder:text-[#9CA3AF]"
                 placeholder="Misal: Kegiatan, Opini (opsional)"
+              />
+            </div>
+
+            <div className="w-full h-px bg-[#E5E7EB] my-2"></div>
+
+            <div className="space-y-3">
+              <label className="text-sm font-bold text-on-surface">Nama Penulis</label>
+              <input 
+                type="text" 
+                name="authorName"
+                value={formData.authorName}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-outline rounded-lg focus:ring-1 focus:ring-[#0F6D46] focus:border-primary focus:outline-none transition-all text-sm bg-surface-container-lowest font-medium text-on-surface placeholder:text-[#9CA3AF]"
+                placeholder="Misal: Ahmad Fulan (opsional)"
               />
             </div>
 

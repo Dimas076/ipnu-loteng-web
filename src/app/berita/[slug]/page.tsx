@@ -62,7 +62,7 @@ export default async function BeritaDetailPage({ params }: { params: Promise<{ s
           <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground border-y py-4">
             <div className="flex items-center gap-2">
               <User className="h-4 w-4" />
-              <span>Oleh <span className="font-medium text-foreground">Tim Redaksi</span></span>
+              <span>Oleh <span className="font-medium text-foreground">{berita.authorName || "Tim Redaksi"}</span></span>
             </div>
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
@@ -132,7 +132,15 @@ export default async function BeritaDetailPage({ params }: { params: Promise<{ s
                       <h4 className="text-sm font-bold leading-snug hover:text-primary hover:underline underline-offset-2 transition-all line-clamp-2 mb-1 text-foreground">
                         {item.title}
                       </h4>
-                      <span className="text-[11px] text-muted-foreground">{formatDate(item.createdAt)}</span>
+                      <div className="flex items-center gap-2 text-[11px] text-muted-foreground mt-1">
+                        <span>{formatDate(item.createdAt)}</span>
+                        {item.authorName && (
+                          <>
+                            <span className="w-1 h-1 rounded-full bg-border" />
+                            <span className="line-clamp-1">{item.authorName}</span>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </Link>
                 ))}

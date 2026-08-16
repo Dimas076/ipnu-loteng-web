@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { title, slug, content, status, image, category, excerpt } = body;
+    const { title, slug, content, status, image, category, excerpt, authorName } = body;
 
     const post = await prisma.berita.create({
       data: {
@@ -32,6 +32,7 @@ export async function POST(request: Request) {
         status: status || 'draft',
         image: image || null,
         category: category || 'Umum',
+        authorName: authorName || null,
       }
     });
 

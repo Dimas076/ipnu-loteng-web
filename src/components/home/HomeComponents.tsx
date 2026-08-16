@@ -285,6 +285,7 @@ interface BeritaItem {
   excerpt?: string | null;
   image?: string | null;
   category?: string | null;
+  authorName?: string | null;
   createdAt: Date | string;
 }
 
@@ -338,9 +339,15 @@ export function KabarTerbaru({ berita }: { berita: BeritaItem[] }) {
                   <h3 className="text-base font-semibold mb-3 group-hover:text-primary transition-colors leading-snug text-foreground line-clamp-2">
                     {item.title}
                   </h3>
-                  <span className="text-xs text-muted-foreground font-medium">
-                    {new Date(item.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
-                  </span>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
+                    <span>{new Date(item.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                    {item.authorName && (
+                      <>
+                        <span className="w-1 h-1 rounded-full bg-border" />
+                        <span>Oleh: {item.authorName}</span>
+                      </>
+                    )}
+                  </div>
                 </div>
               </Link>
             </motion.div>
