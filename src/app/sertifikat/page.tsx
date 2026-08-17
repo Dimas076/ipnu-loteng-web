@@ -14,6 +14,11 @@ export default function SertifikatPage() {
   const [results, setResults] = useState<any[] | null>(null);
   const [error, setError] = useState("");
 
+  // Form Evaluasi State
+  const [selectedPeserta, setSelectedPeserta] = useState<any | null>(null);
+  const [formResponses, setFormResponses] = useState<Record<string, string>>({});
+  const [submittingForm, setSubmittingForm] = useState(false);
+
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!hp.trim()) {
@@ -32,6 +37,34 @@ export default function SertifikatPage() {
       setResults(null);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleOpenForm = (peserta: any) => {
+    setSelectedPeserta(peserta);
+    setFormResponses({});
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedPeserta) return;
+    
+    setSubmittingForm(true);
+    try {
+      await axios.post(`/api/peserta/${selectedPeserta.id}/submit-form`, {
+        responses: formResponses
+      });
+      
+      // Update local state
+      setResults(prev => 
+        prev ? prev.map(p => p.id === selectedPeserta.id ? { ...p, has_filled_form: true } : p) : null
+      );
+      setSelectedPeserta(null);
+      alert("Terima kasih, evaluasi berhasil dikirim. Anda sekarang dapat mengunduh sertifikat.");
+    } catch (err: any) {
+      alert(err.response?.data?.message || "Gagal mengirim evaluasi. Coba lagi.");
+    } finally {
+      setSubmittingForm(false);
     }
   };
 
@@ -146,12 +179,29 @@ export default function SertifikatPage() {
                       </div>
                       
                       <div className="pt-4 border-t border-border flex flex-col sm:flex-row gap-3">
-                        <Link href={`/sertifikat/${peserta.id}/cetak`} target="_blank" className="w-full">
-                          <Button className="w-full font-bold bg-primary text-white hover:bg-primary/90 flex items-center justify-center rounded-md group-hover:shadow-md transition-all">
-                            <Download className="w-4 h-4 mr-2" />
-                            Unduh Sertifikat
+                        {peserta.agenda?.sertifikat_form_fields?.length > 0 && !peserta.has_filled_form ? (
+                          <Button 
+                            onClick={() => handleOpenForm(peserta)} 
+                            className="w-full font-bold bg-[#1565c0] text-white hover:bg-[#1565c0]/90 flex items-center justify-center rounded-md"
+                          >
+                            <AlertCircle className="w-4 h-4 mr-2" />
+                            Isi Form Evaluasi
                           </Button>
-                        </Link>
+                        ) : peserta.sertifikat_file ? (
+                          <a href={peserta.sertifikat_file} target="_blank" rel="noopener noreferrer" className="w-full">
+                            <Button className="w-full font-bold bg-primary text-white hover:bg-primary/90 flex items-center justify-center rounded-md group-hover:shadow-md transition-all">
+                              <Download className="w-4 h-4 mr-2" />
+                              Unduh File Asli
+                            </Button>
+                          </a>
+                        ) : (
+                          <Link href={`/sertifikat/${peserta.id}/cetak`} target="_blank" className="w-full">
+                            <Button className="w-full font-bold bg-primary text-white hover:bg-primary/90 flex items-center justify-center rounded-md group-hover:shadow-md transition-all">
+                              <Download className="w-4 h-4 mr-2" />
+                              Unduh E-Sertifikat
+                            </Button>
+                          </Link>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -162,6 +212,74 @@ export default function SertifikatPage() {
 
         </div>
       </div>
+
+      {/* Modal Form Evaluasi */}
+      {selectedPeserta && selectedPeserta.agenda?.sertifikat_form_fields && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-xl border border-border w-full max-w-xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-border flex justify-between items-center bg-primary/5 rounded-t-lg">
+              <div>
+                <h2 className="text-xl font-bold text-foreground">Form Evaluasi Kegiatan</h2>
+                <p className="text-sm text-muted-foreground mt-1">Wajib diisi sebelum mengunduh sertifikat.</p>
+              </div>
+              <button onClick={() => setSelectedPeserta(null)} className="text-muted-foreground hover:text-foreground font-bold bg-white p-1.5 rounded-md border border-border">✕</button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto">
+              <form id="evaluasiForm" onSubmit={handleFormSubmit} className="space-y-6">
+                {selectedPeserta.agenda.sertifikat_form_fields.map((field: any, index: number) => (
+                  <div key={field.id || index}>
+                    <label className="block text-sm font-bold text-foreground mb-2">
+                      {index + 1}. {field.question} <span className="text-red-500">*</span>
+                    </label>
+                    
+                    {field.type === 'text' && (
+                      <input 
+                        type="text" 
+                        required 
+                        className="w-full p-2.5 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all"
+                        value={formResponses[field.id] || ''}
+                        onChange={(e) => setFormResponses({...formResponses, [field.id]: e.target.value})}
+                      />
+                    )}
+
+                    {field.type === 'textarea' && (
+                      <textarea 
+                        required 
+                        rows={3}
+                        className="w-full p-2.5 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all"
+                        value={formResponses[field.id] || ''}
+                        onChange={(e) => setFormResponses({...formResponses, [field.id]: e.target.value})}
+                      />
+                    )}
+
+                    {field.type === 'select' && (
+                      <select 
+                        required 
+                        className="w-full p-2.5 border border-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all bg-white"
+                        value={formResponses[field.id] || ''}
+                        onChange={(e) => setFormResponses({...formResponses, [field.id]: e.target.value})}
+                      >
+                        <option value="" disabled>Pilih Jawaban...</option>
+                        {field.options?.map((opt: string, i: number) => (
+                          <option key={i} value={opt}>{opt}</option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+                ))}
+              </form>
+            </div>
+            
+            <div className="p-6 border-t border-border bg-muted/30 flex justify-end gap-3 rounded-b-lg">
+              <Button variant="outline" type="button" className="rounded-lg" onClick={() => setSelectedPeserta(null)} disabled={submittingForm}>Batal</Button>
+              <Button form="evaluasiForm" type="submit" className="rounded-lg font-bold bg-primary text-white hover:bg-primary/90" disabled={submittingForm}>
+                {submittingForm ? 'Menyimpan...' : 'Kirim & Lanjut Unduh'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </MainLayout>
   );
 }

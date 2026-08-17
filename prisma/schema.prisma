@@ -59,6 +59,7 @@ model Agenda {
   image               String?
   whatsapp_group_link String?
   rundown             Json?
+  sertifikat_form_fields Json?
   status              String   @default("upcoming")
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
@@ -73,6 +74,9 @@ model Peserta {
   asal_pimpinan     String?
   nomor_hp          String
   status_sertifikat String   @default("pending") // pending, approved
+  sertifikat_file   String?
+  sertifikat_form_responses Json?
+  has_filled_form   Boolean  @default(false)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 }

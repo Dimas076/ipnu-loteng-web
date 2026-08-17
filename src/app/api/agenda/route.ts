@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { title, description, category, date, endDate, location, map_link, latitude, longitude, whatsapp_group_link, status, image, rundown } = body;
+    const { title, description, category, date, endDate, location, map_link, latitude, longitude, whatsapp_group_link, status, image, rundown, sertifikat_form_fields } = body;
 
     const agenda = await prisma.agenda.create({
       data: {
@@ -40,6 +40,7 @@ export async function POST(request: Request) {
         status: status || 'upcoming',
         image: image || null,
         rundown: rundown || null,
+        sertifikat_form_fields: sertifikat_form_fields || null,
       }
     });
 

@@ -8,6 +8,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     const { id } = await params;
     const participants = await prisma.peserta.findMany({
       where: { agendaId: parseInt(id) },
+      include: { agenda: true },
       orderBy: { createdAt: 'desc' }
     });
 

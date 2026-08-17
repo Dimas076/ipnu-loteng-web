@@ -31,6 +31,7 @@ export default function AdminAgendaPage() {
     status: "open",
     image: "",
     rundown: [] as {time: string, title: string}[],
+    sertifikat_form_fields: [] as { id: string, question: string, type: 'text' | 'textarea' | 'select', options: string[] }[],
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -70,6 +71,7 @@ export default function AdminAgendaPage() {
         status: agenda.status,
         image: agenda.image || "",
         rundown: Array.isArray(agenda.rundown) ? agenda.rundown : [],
+        sertifikat_form_fields: Array.isArray(agenda.sertifikat_form_fields) ? agenda.sertifikat_form_fields : [],
       });
     } else {
       setEditId(null);
@@ -87,6 +89,7 @@ export default function AdminAgendaPage() {
         status: "open",
         image: "",
         rundown: [],
+        sertifikat_form_fields: [],
       });
     }
     setIsModalOpen(true);
@@ -106,6 +109,34 @@ export default function AdminAgendaPage() {
     const newRundown = [...formData.rundown];
     newRundown[index][field] = value;
     setFormData({ ...formData, rundown: newRundown });
+  };
+
+  const handleAddFormField = () => {
+    setFormData({ 
+      ...formData, 
+      sertifikat_form_fields: [
+        ...formData.sertifikat_form_fields, 
+        { id: Date.now().toString(), question: "", type: "text", options: ["Opsi 1"] }
+      ] 
+    });
+  };
+
+  const handleRemoveFormField = (index: number) => {
+    const newFields = [...formData.sertifikat_form_fields];
+    newFields.splice(index, 1);
+    setFormData({ ...formData, sertifikat_form_fields: newFields });
+  };
+
+  const handleUpdateFormField = (index: number, field: 'question' | 'type', value: string) => {
+    const newFields = [...formData.sertifikat_form_fields];
+    newFields[index] = { ...newFields[index], [field]: value };
+    setFormData({ ...formData, sertifikat_form_fields: newFields });
+  };
+
+  const handleUpdateFormOptions = (index: number, optionsString: string) => {
+    const newFields = [...formData.sertifikat_form_fields];
+    newFields[index].options = optionsString.split(',').map(s => s.trim()).filter(s => s);
+    setFormData({ ...formData, sertifikat_form_fields: newFields });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -411,6 +442,79 @@ export default function AdminAgendaPage() {
                               <X className="h-4 w-4" />
                             </Button>
                           </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Sertifikat Form Builder */}
+                <div className="border border-border p-4 rounded-lg bg-primary/5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label className="block text-sm font-bold text-primary">Form Evaluasi Sertifikat (Opsional)</label>
+                      <p className="text-xs text-muted-foreground mt-0.5">Pertanyaan yang wajib diisi peserta sebelum bisa mengunduh sertifikat.</p>
+                    </div>
+                    <Button type="button" variant="outline" size="sm" onClick={handleAddFormField} className="h-8 gap-1 border-primary text-primary hover:bg-primary hover:text-white shrink-0">
+                      <Plus className="h-4 w-4" /> Tambah Pertanyaan
+                    </Button>
+                  </div>
+                  
+                  {formData.sertifikat_form_fields.length === 0 ? (
+                    <p className="text-sm text-muted-foreground italic text-center py-4 bg-white/50 rounded-lg">Peserta bisa langsung unduh sertifikat tanpa mengisi evaluasi.</p>
+                  ) : (
+                    <div className="space-y-4">
+                      {formData.sertifikat_form_fields.map((field, index) => (
+                        <div key={field.id || index} className="p-3 bg-white border border-border rounded-lg space-y-3 relative group">
+                          <div className="absolute -top-2.5 -right-2.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button 
+                              type="button" 
+                              onClick={() => handleRemoveFormField(index)}
+                              className="bg-destructive text-white rounded-full p-1 shadow-sm hover:bg-destructive/90"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </div>
+                          
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div className="sm:col-span-2">
+                              <label className="block text-xs font-semibold text-muted-foreground mb-1">Pertanyaan</label>
+                              <input 
+                                type="text" 
+                                placeholder="Cth: Bagaimana pendapat Anda tentang materi ini?" 
+                                className="w-full p-2 border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-none text-sm" 
+                                value={field.question} 
+                                onChange={(e) => handleUpdateFormField(index, 'question', e.target.value)} 
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-semibold text-muted-foreground mb-1">Tipe Jawaban</label>
+                              <select 
+                                className="w-full p-2 border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-none text-sm"
+                                value={field.type}
+                                onChange={(e) => handleUpdateFormField(index, 'type', e.target.value as any)}
+                              >
+                                <option value="text">Teks Singkat</option>
+                                <option value="textarea">Paragraf Panjang</option>
+                                <option value="select">Pilihan Ganda (Dropdown)</option>
+                              </select>
+                            </div>
+                          </div>
+                          
+                          {field.type === 'select' && (
+                            <div>
+                              <label className="block text-xs font-semibold text-muted-foreground mb-1">Pilihan Jawaban (Pisahkan dengan koma)</label>
+                              <input 
+                                type="text" 
+                                placeholder="Sangat Baik, Baik, Cukup, Kurang" 
+                                className="w-full p-2 border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-none text-sm bg-muted/30" 
+                                value={(field.options || []).join(', ')} 
+                                onChange={(e) => handleUpdateFormOptions(index, e.target.value)} 
+                                required
+                              />
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>

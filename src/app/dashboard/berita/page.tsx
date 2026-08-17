@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "@/lib/axios";
 import { Button } from "@/components/ui/button";
-import { Plus, Edit, Trash2, FileText, Search, Filter, MoreHorizontal } from "lucide-react";
+import { Plus, Edit, Trash2, FileText, Search, Filter, MoreHorizontal, Share2 } from "lucide-react";
 
 export default function BeritaPage() {
   const [posts, setPosts] = useState<any[]>([]);
@@ -35,6 +35,29 @@ export default function BeritaPage() {
       } catch (error) {
         console.error("Gagal menghapus berita:", error);
       }
+    }
+  };
+
+  const handleShare = async (slug: string, title: string) => {
+    const url = `${window.location.origin}/berita/${slug}`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: title,
+          text: `Baca berita ini: ${title}`,
+          url: url,
+        });
+      } catch (error) {
+        console.log("Error sharing", error);
+      }
+    } else {
+      // Fallback for desktop/unsupported browsers
+      navigator.clipboard.writeText(url).then(() => {
+        alert("Link berita berhasil disalin ke clipboard!");
+      }).catch((err) => {
+        console.error('Gagal menyalin link: ', err);
+      });
     }
   };
 
@@ -163,6 +186,15 @@ export default function BeritaPage() {
                     </td>
                     <td className="px-6 py-4 text-center">
                       <div className="flex items-center justify-center gap-2 opacity-100 transition-opacity">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-8 w-8 rounded-lg bg-surface-container-low text-blue-600 hover:text-white hover:bg-blue-600 border border-outline-variant"
+                          title="Bagikan Berita"
+                          onClick={() => handleShare(post.slug, post.title)}
+                        >
+                          <Share2 className="h-4 w-4" />
+                        </Button>
                         <Link href={`/dashboard/berita/edit/${post.id}`}>
                           <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg bg-surface-container-low text-[#0d631b] hover:text-white hover:bg-[#0d631b] border border-outline-variant" title="Edit Berita">
                             <Edit className="h-4 w-4" />

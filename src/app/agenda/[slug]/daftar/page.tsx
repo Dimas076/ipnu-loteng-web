@@ -14,12 +14,23 @@ export default function DaftarAgendaPage() {
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [formData, setFormData] = useState({
+    nama: "",
+    alamat: "",
+    wa: "",
+    email: "",
+    kegiatan: ""
+  });
+
   useEffect(() => {
     // Fetch agenda to know what we are registering for
     const fetchAgenda = async () => {
       try {
         const res = await axios.get(`/api/agenda/${slug}`);
         setAgenda(res.data.data);
+        if (res.data.data) {
+          setFormData(prev => ({ ...prev, kegiatan: res.data.data.id.toString() }));
+        }
       } catch (error) {
         console.error("Gagal memuat detail agenda", error);
       } finally {
@@ -30,15 +41,26 @@ export default function DaftarAgendaPage() {
     if (slug) fetchAgenda();
   }, [slug]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+    
+    try {
+      await axios.post('/api/peserta', {
+        agendaId: formData.kegiatan,
+        nama_lengkap: formData.nama,
+        asal_pimpinan: formData.alamat,
+        nomor_hp: formData.wa,
+      });
+
       alert("Pendaftaran berhasil!");
       router.push(`/agenda/${slug}`);
-    }, 1500);
+    } catch (error) {
+      console.error("Gagal mendaftar:", error);
+      alert("Terjadi kesalahan saat mendaftar. Silakan coba lagi.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (loading) {
@@ -76,6 +98,8 @@ export default function DaftarAgendaPage() {
                 type="text"
                 id="nama"
                 required
+                value={formData.nama}
+                onChange={(e) => setFormData({...formData, nama: e.target.value})}
                 placeholder="Masukkan nama lengkap Anda"
                 className="w-full px-4 py-3 rounded-md border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors bg-white text-on-surface"
               />
@@ -84,13 +108,15 @@ export default function DaftarAgendaPage() {
             {/* Alamat Lengkap */}
             <div>
               <label htmlFor="alamat" className="block text-sm font-medium text-on-surface mb-2">
-                Alamat Lengkap
+                Alamat Lengkap / Asal Pimpinan
               </label>
               <textarea
                 id="alamat"
                 required
                 rows={4}
-                placeholder="Masukkan alamat lengkap domisili"
+                value={formData.alamat}
+                onChange={(e) => setFormData({...formData, alamat: e.target.value})}
+                placeholder="Masukkan alamat lengkap atau asal pimpinan"
                 className="w-full px-4 py-3 rounded-md border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors bg-white text-on-surface resize-none"
               ></textarea>
             </div>
@@ -105,18 +131,21 @@ export default function DaftarAgendaPage() {
                   type="tel"
                   id="wa"
                   required
+                  value={formData.wa}
+                  onChange={(e) => setFormData({...formData, wa: e.target.value})}
                   placeholder="Contoh: 081234567890"
                   className="w-full px-4 py-3 rounded-md border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors bg-white text-on-surface"
                 />
               </div>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-on-surface mb-2">
-                  Alamat Email
+                  Alamat Email (Opsional)
                 </label>
                 <input
                   type="email"
                   id="email"
-                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
                   placeholder="email@contoh.com"
                   className="w-full px-4 py-3 rounded-md border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors bg-white text-on-surface"
                 />
@@ -132,8 +161,9 @@ export default function DaftarAgendaPage() {
                 <select
                   id="kegiatan"
                   required
+                  value={formData.kegiatan}
+                  onChange={(e) => setFormData({...formData, kegiatan: e.target.value})}
                   className="w-full px-4 py-3 rounded-md border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors bg-white text-on-surface appearance-none cursor-pointer"
-                  defaultValue={agenda?.id || ""}
                 >
                   <option value="" disabled>Pilih salah satu kegiatan...</option>
                   {agenda && <option value={agenda.id}>{agenda.title}</option>}
