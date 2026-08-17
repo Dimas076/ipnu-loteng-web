@@ -170,45 +170,63 @@ export default function AdminAgendaPage() {
   }
 
   return (
-    <>
-      <div className="p-6 md:p-8 max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Manajemen Agenda</h1>
-            <p className="text-muted-foreground text-sm mt-1">Kelola pendaftaran kegiatan dan sertifikat peserta</p>
-          </div>
-          <Button onClick={() => handleOpenModal()} className="gap-2 rounded-lg">
-            <Plus className="h-4 w-4" />
-            Tambah Agenda
-          </Button>
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 p-6 md:p-8 max-w-7xl mx-auto">
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-lg border border-border">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Manajemen Agenda</h1>
+          <p className="text-sm text-muted-foreground mt-1 font-medium">Kelola pendaftaran kegiatan dan sertifikat peserta</p>
         </div>
+        <Button onClick={() => handleOpenModal()} className="rounded-lg transition-all font-bold px-6 shrink-0">
+          <Plus className="h-5 w-5 mr-2" />
+          Tambah Agenda
+        </Button>
+      </div>
 
-        <div className="bg-white rounded-lg border overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-surface-container-low border-b border-outline-variant text-on-surface font-bold">
-                <tr>
-                  <th className="p-4 font-bold text-foreground">Acara</th>
-                  <th className="p-4 font-bold text-foreground">Kategori</th>
-                  <th className="p-4 font-bold text-foreground">Waktu & Tempat</th>
-                  <th className="p-4 font-bold text-foreground">Status</th>
-                  <th className="p-4 font-bold text-foreground text-center w-24">Peserta</th>
-                  <th className="p-4 font-bold text-foreground text-center w-32">Aksi</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
+      {/* Table Section */}
+      <div className="bg-surface-container-lowest rounded-lg border border-outline-variant overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-left">
+            <thead className="bg-surface-container-low text-on-surface border-b border-outline-variant font-bold">
+              <tr>
+                <th className="px-6 py-4 whitespace-nowrap">Acara</th>
+                <th className="px-6 py-4 whitespace-nowrap">Kategori</th>
+                <th className="px-6 py-4 whitespace-nowrap">Waktu & Tempat</th>
+                <th className="px-6 py-4 whitespace-nowrap">Status</th>
+                <th className="px-6 py-4 whitespace-nowrap text-center">Peserta</th>
+                <th className="px-6 py-4 whitespace-nowrap text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
                 {loading ? (
                   <tr>
-                    <td colSpan={6} className="p-8 text-center text-muted-foreground">Memuat data...</td>
+                    <td colSpan={6} className="px-6 py-12 text-center">
+                      <div className="flex flex-col items-center justify-center space-y-3">
+                        <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent"></div>
+                        <p className="text-muted-foreground font-medium">Memuat data agenda...</p>
+                      </div>
+                    </td>
                   </tr>
                 ) : agendas.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="p-8 text-center text-muted-foreground">Belum ada agenda</td>
+                    <td colSpan={6} className="px-6 py-16 text-center">
+                      <div className="flex flex-col items-center justify-center space-y-4">
+                        <div className="h-20 w-20 rounded-lg bg-muted flex items-center justify-center">
+                          <Calendar className="h-10 w-10 text-muted-foreground/50" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-bold text-foreground">Tidak Ada Agenda</h3>
+                          <p className="text-muted-foreground mt-1 max-w-sm mx-auto">
+                            Belum ada agenda yang ditambahkan.
+                          </p>
+                        </div>
+                      </div>
+                    </td>
                   </tr>
                 ) : (
                   agendas.map((agenda) => (
                   <tr key={agenda.id} className="bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-low border-b border-outline-variant transition-colors group">
-                    <td className="p-4">
+                    <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-surface-container-low border border-outline-variant flex items-center justify-center text-on-surface-variant shrink-0 group-hover:text-primary transition-colors">
                           <Calendar className="w-5 h-5" />
@@ -219,12 +237,12 @@ export default function AdminAgendaPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="p-4">
+                    <td className="px-6 py-4">
                       <span className="px-3 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-[#e3f2fd] text-[#1565c0]">
                         {agenda.category || "Semua"}
                       </span>
                     </td>
-                    <td className="p-4">
+                    <td className="px-6 py-4">
                       <div className="flex flex-col gap-1 text-xs">
                         <span className="flex items-center text-on-surface-variant">
                           <Clock className="w-3.5 h-3.5 mr-1.5 text-on-surface-variant" />
@@ -240,7 +258,7 @@ export default function AdminAgendaPage() {
                         </span>
                       </div>
                     </td>
-                    <td className="p-4">
+                    <td className="px-6 py-4">
                       <span className={`inline-flex px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider border ${
                         agenda.status === 'open' 
                           ? 'bg-[#EEF7F2] text-[#0d631b] border-[#0d631b]/20' 
@@ -251,14 +269,14 @@ export default function AdminAgendaPage() {
                         {agenda.status === 'open' ? 'Buka' : agenda.status === 'closed' ? 'Ditutup' : 'Selesai'}
                       </span>
                       </td>
-                      <td className="p-4 text-center">
+                      <td className="px-6 py-4 text-center">
                         <Link href={`/dashboard/agenda/${agenda.id}`} className="inline-block">
                           <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg bg-surface-container-low text-[#1565c0] hover:text-white hover:bg-[#1565c0] border border-outline-variant" title="Lihat Pendaftar">
                             <Users className="h-4 w-4" />
                           </Button>
                         </Link>
                       </td>
-                      <td className="p-4 text-center">
+                      <td className="px-6 py-4 text-center">
                       <div className="flex items-center justify-center gap-2 opacity-100 transition-opacity">
                         <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg bg-surface-container-low text-[#0d631b] hover:text-white hover:bg-[#0d631b] border border-outline-variant" title="Edit Agenda" onClick={() => handleOpenModal(agenda)}>
                           <Edit className="h-4 w-4" />
@@ -451,6 +469,6 @@ export default function AdminAgendaPage() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
