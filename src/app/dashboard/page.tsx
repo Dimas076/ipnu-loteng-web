@@ -93,7 +93,7 @@ export default function DashboardPage() {
     { label: "Tulis Berita Baru", href: "/dashboard/berita/create", icon: FileText, desc: "Buat dan publikasikan artikel" },
     { label: "Tambah Agenda", href: "/dashboard/agenda", icon: Calendar, desc: "Buat jadwal kegiatan baru" },
     { label: "Upload Foto Galeri", href: "/dashboard/galeri", icon: ImageIcon, desc: "Tambah dokumentasi foto" },
-    { label: "Edit Profil Organisasi", href: "/dashboard/profil", icon: TrendingUp, desc: "Perbarui sejarah & pengurus" },
+    { label: "Edit Sejarah Organisasi", href: "/dashboard/profil", icon: TrendingUp, desc: "Perbarui sejarah & pengurus" },
   ];
 
   return (

@@ -1,7 +1,7 @@
 import { MainLayout } from "@/components/layouts/MainLayout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, User, ArrowLeft, Image as ImageIcon, TrendingUp, Tag, Newspaper } from "lucide-react";
+import { Calendar, User, ArrowLeft, Image as ImageIcon, TrendingUp, Tag, Newspaper, BadgeCheck } from "lucide-react";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
@@ -29,46 +29,55 @@ export default async function BeritaDetailPage({ params }: { params: Promise<{ s
       id: { not: berita.id } // Kecualikan berita yang sedang dibaca
     },
     orderBy: { createdAt: 'desc' },
-    take: 4
+    take: 5
   });
 
   // Format Tanggal
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString("id-ID", {
-      day: "numeric", month: "long", year: "numeric"
-    });
+    return new Intl.DateTimeFormat("id-ID", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }).format(date);
   };
 
   return (
     <MainLayout>
       <div className="container mx-auto px-4 py-8 md:py-12 max-w-7xl">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           
           {/* KONTEN UTAMA (Kiri) */}
           <div className="lg:col-span-8">
-            <Button variant="ghost" className="mb-8 -ml-4 text-muted-foreground hover:text-primary" asChild>
-              <Link href="/berita">
-                <ArrowLeft className="mr-2 h-4 w-4" /> Kembali ke Indeks Berita
-              </Link>
-            </Button>
+            
+            {/* Breadcrumbs */}
+            <nav className="flex text-sm text-muted-foreground mb-4 md:mb-6 font-semibold">
+              <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+              <span className="mx-2">/</span>
+              <Link href="/berita" className="hover:text-primary transition-colors">Berita</Link>
+              <span className="mx-2">/</span>
+              <span className="text-primary">{berita.category || "Umum"}</span>
+            </nav>
 
             {/* Artikel Header */}
-        <header className="mb-10">
-          <Badge className="mb-4">{berita.category || "Umum"}</Badge>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[#0F172A] leading-tight mb-6">
+        <header className="mb-6">
+          <h1 className="text-3xl md:text-4xl lg:text-[42px] font-bold tracking-tight text-[#0F172A] leading-[1.25] mb-5">
             {berita.title}
           </h1>
           
-          <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground border-y py-4">
-            <div className="flex items-center gap-2">
-              <User className="h-4 w-4" />
-              <span>Oleh <span className="font-medium text-foreground">{berita.authorName || "Tim Redaksi"}</span></span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-2 mb-2">
+            <div className="flex flex-col">
+              <div className="flex items-center text-primary font-bold text-[15px] mb-1">
+                <span className="text-muted-foreground font-normal mr-1.5">Oleh</span> 
+                {berita.authorName || "Tim Redaksi IPNU"}
+                <BadgeCheck className="w-[18px] h-[18px] ml-1.5 text-white fill-blue-500" />
+              </div>
+              <div className="text-sm text-muted-foreground">
+                {formatDate(berita.createdAt)}
+              </div>
             </div>
+            
             <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              <span>{formatDate(berita.createdAt)}</span>
-            </div>
-            <div className="ml-auto">
               <ShareButton title={berita.title} />
             </div>
           </div>
@@ -76,12 +85,12 @@ export default async function BeritaDetailPage({ params }: { params: Promise<{ s
 
         {/* Hero Image */}
         {berita.image ? (
-          <div className="aspect-[21/9] bg-muted rounded-lg mb-10 overflow-hidden relative border border-border">
+          <div className="aspect-[16/9] bg-muted rounded-lg mb-8 overflow-hidden relative border border-border">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={berita.image} alt={berita.title} className="w-full h-full object-cover" />
           </div>
         ) : (
-          <div className="aspect-[21/9] bg-gradient-to-br from-primary/15 to-primary/5 rounded-lg mb-10 flex items-center justify-center border border-border">
+          <div className="aspect-[16/9] bg-gradient-to-br from-primary/15 to-primary/5 rounded-lg mb-8 flex items-center justify-center border border-border">
             <ImageIcon className="h-16 w-16 text-muted-foreground/30" />
           </div>
         )}
@@ -153,16 +162,7 @@ export default async function BeritaDetailPage({ params }: { params: Promise<{ s
             )}
           </div>
 
-          {/* Widget 2: Banner / Info CTA */}
-          <div className="bg-primary text-white rounded-lg p-8 text-center relative overflow-hidden border border-border">
-             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-2xl -translate-y-10 translate-x-10"></div>
-             
-             <h3 className="text-xl font-bold mb-2">Grup WhatsApp IPNU Loteng</h3>
-             <p className="text-primary-foreground/80 text-sm mb-6">Bergabunglah dengan channel WhatsApp kami untuk mendapatkan informasi terkini secara langsung.</p>
-             <Button className="w-full rounded-lg font-bold relative z-10 transition-transform h-12 bg-[#25D366] text-white hover:bg-[#20bd5a]" asChild>
-               <a href="https://whatsapp.com/channel/0029Vauxr2e6WaKevYRY1m3b" target="_blank" rel="noopener noreferrer">Gabung Channel WA</a>
-             </Button>
-          </div>
+
 
         </div>
       </div>

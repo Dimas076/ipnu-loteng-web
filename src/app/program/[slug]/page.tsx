@@ -218,7 +218,7 @@ export default function ProgramPage() {
                   <Link href="/galeri">Lihat Galeri Kegiatan</Link>
                 </Button>
                 <Button size="lg" className="font-bold text-white bg-transparent border border-white/40 hover:bg-white/10 hover:border-white rounded-md h-12 px-8" asChild>
-                  <Link href="/profil">Profil Organisasi</Link>
+                  <Link href="/sejarah">Sejarah Organisasi</Link>
                 </Button>
               </div>
             </div>

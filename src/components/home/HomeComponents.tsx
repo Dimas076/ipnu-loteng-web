@@ -162,7 +162,7 @@ export function TentangKami({ sejarahImage }: { sejarahImage?: string | null }) 
   return (
     <section className="py-12 md:py-16 bg-background">
       <div className="container mx-auto px-4 lg:px-8 max-w-6xl">
-        <div className="flex flex-col md:flex-row items-start gap-12 lg:gap-16">
+        <div className="flex flex-col md:flex-row items-start gap-8 md:gap-12 lg:gap-16">
           <motion.div
             initial={{ opacity: 0, x: -15 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -192,11 +192,10 @@ export function TentangKami({ sejarahImage }: { sejarahImage?: string | null }) 
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full md:w-1/2 mt-8 md:mt-0"
+            className="w-full md:w-1/2"
           >
-            <p className="text-sm font-bold text-primary mb-3">Sejak 1954</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6 leading-tight tracking-tight">
-              Mencetak Generasi<br /><span className="italic">Pelajar Kritis &amp; Agamis</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6 leading-tight tracking-tight mt-[-4px]">
+              Mencetak Generasi<br /><span className="text-primary">Pelajar Kritis &amp; Agamis</span>
             </h2>
             <p className="text-base text-muted-foreground mb-4 leading-relaxed max-w-[65ch]">
               Ikatan Pelajar Nahdlatul Ulama (IPNU) Kabupaten Lombok Tengah hadir sebagai wadah perjuangan, kaderisasi, dan intelektual bagi para pelajar.
@@ -320,14 +319,13 @@ export function KabarTerbaru({ berita }: { berita: BeritaItem[] }) {
               transition={{ duration: 0.5, delay: index * 0.08 }}
               className={index === 2 ? "hidden md:block" : ""}
             >
-              <Link href={`/berita/${item.slug}`} className="group block h-full bg-white border border-border rounded-md overflow-hidden hover:shadow-md transition-shadow">
+              <Link href={`/berita/${item.slug}`} className="group block h-full bg-white border border-border rounded-md overflow-hidden">
                 <div className="aspect-[16/10] w-full relative overflow-hidden bg-muted">
                   {item.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={item.image}
                       alt={item.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-500"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-muted">
@@ -336,7 +334,7 @@ export function KabarTerbaru({ berita }: { berita: BeritaItem[] }) {
                   )}
                 </div>
                 <div className="p-5">
-                  <h3 className="text-base font-semibold mb-3 group-hover:text-primary transition-colors leading-snug text-foreground line-clamp-2">
+                  <h3 className="text-base font-semibold mb-3 hover:text-primary hover:underline transition-colors leading-snug text-foreground line-clamp-2">
                     {item.title}
                   </h3>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">

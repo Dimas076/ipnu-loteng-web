@@ -23,7 +23,7 @@ export function Footer() {
             <div className="flex flex-col space-y-1 md:space-y-4">
               <span className="text-white/50 font-semibold tracking-wider text-sm uppercase mb-2">Navigasi</span>
               <Link href="/" className="text-white/90 hover:text-white transition-colors w-fit py-2 md:py-0 block">Beranda</Link>
-              <Link href="/profil" className="text-white/90 hover:text-white transition-colors w-fit py-2 md:py-0 block">Profil</Link>
+              <Link href="/sejarah" className="text-white/90 hover:text-white transition-colors w-fit py-2 md:py-0 block">Sejarah</Link>
               <Link href="/berita" className="text-white/90 hover:text-white transition-colors w-fit py-2 md:py-0 block">Berita</Link>
               <Link href="/agenda" className="text-white/90 hover:text-white transition-colors w-fit py-2 md:py-0 block">Agenda</Link>
             </div>

@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import prisma from "@/lib/prisma";
 
 export const metadata = {
-  title: "Profil | IPNU Lombok Tengah",
+  title: "Sejarah | IPNU Lombok Tengah",
   description: "Sejarah, Visi Misi, dan Struktur Organisasi PC IPNU Lombok Tengah.",
 };
 
@@ -12,7 +12,6 @@ export const revalidate = 60;
 
 export default async function ProfilPage() {
   const profile = await prisma.profile.findUnique({ where: { id: 1 } });
-  const pilars = await prisma.pilar.findMany();
   return (
     <MainLayout>
       {/* HERO SECTION */}
@@ -22,7 +21,7 @@ export default async function ProfilPage() {
         
         <div className="container mx-auto px-4 relative z-10 flex flex-col items-center text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground tracking-tight mb-6">
-            Profil <span className="text-primary italic">Organisasi.</span>
+            Sejarah <span className="text-primary italic">Organisasi.</span>
           </h1>
           
           <p className="text-muted-foreground text-lg md:text-xl max-w-2xl font-medium">
@@ -60,9 +59,8 @@ export default async function ProfilPage() {
 
           <div className="space-y-8">
             <div>
-              <Badge variant="outline" className="border-primary/30 bg-primary/5 mb-4 text-primary">Lahirnya Organisasi</Badge>
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground leading-tight">
-                Jejak Langkah <span className="text-primary font-semibold">Pelajar NU</span>
+                Sejarah Berdirinya <span className="text-primary font-semibold">IPNU</span>
               </h2>
             </div>
 
@@ -83,34 +81,6 @@ export default async function ProfilPage() {
                 </>
               )}
             </div>
-          </div>
-        </section>
-
-        {/* Arah Gerak / Visi Misi */}
-        <section className="py-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-4">Arah Gerak <span className="font-semibold">Organisasi</span></h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Tiga pilar utama yang menjadi landasan pergerakan Pimpinan Cabang IPNU Kabupaten Lombok Tengah Masa Khidmat 2026-2028.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-border rounded-lg overflow-hidden">
-            {pilars.length > 0 ? (
-              pilars.map((pilar, index) => (
-                <div key={pilar.id} className={`bg-white rounded-lg p-8 ${index !== pilars.length - 1 ? 'border-b md:border-b-0 md:border-r' : 'border-none'} border-border hover:bg-muted/30 transition-all duration-300 text-center group`}>
-                  <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-6 transition-transform duration-300 text-on-primary">
-                    <span className="text-2xl font-bold">{index + 1}</span>
-                  </div>
-                  <h3 className="text-xl font-bold mb-3 text-foreground">{pilar.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {pilar.description}
-                  </p>
-                </div>
-              ))
-            ) : (
-              <div className="col-span-3 text-center py-12 text-muted-foreground">Belum ada pilar arah gerak.</div>
-            )}
           </div>
         </section>
       </div>

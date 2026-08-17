@@ -81,6 +81,7 @@ model Profile {
   id            Int      @id @default(1)
   sejarah_text  String?
   sejarah_image String?
+  tentang_kami_image String?
   hero_image_1  String?
   hero_image_2  String?
   hero_image_3  String?

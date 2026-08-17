@@ -68,7 +68,7 @@ export default async function Home() {
       <StatsStrip stats={stats} />
 
       {/* Tentang Kami — foto dari profile.sejarah_image */}
-      <TentangKami sejarahImage={profile?.sejarah_image} />
+      <TentangKami sejarahImage={profile?.tentang_kami_image} />
 
       {/* Program Kerja — konten statis (belum ada di DB) */}
       <ProgramSection />

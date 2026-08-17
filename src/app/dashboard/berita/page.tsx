@@ -152,10 +152,10 @@ export default function BeritaPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 font-medium text-muted-foreground">
-                      {post.author?.name || 'Admin'}
+                      {post.authorName || 'Tim Redaksi IPNU'}
                     </td>
                     <td className="px-6 py-4 text-muted-foreground font-medium">
-                      {new Date(post.created_at).toLocaleDateString('id-ID', {
+                      {new Date(post.createdAt).toLocaleDateString('id-ID', {
                         day: 'numeric',
                         month: 'short',
                         year: 'numeric'

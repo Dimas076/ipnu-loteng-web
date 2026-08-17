@@ -25,12 +25,13 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { sejarahText, sejarahImageUrl, arahGerak, heroImage1, heroImage2, heroImage3 } = body;
+    const { sejarahText, sejarahImageUrl, tentangKamiImage, arahGerak, heroImage1, heroImage2, heroImage3 } = body;
 
     // 1. Upsert Profile
     const updateData: any = {};
     if (sejarahText !== undefined) updateData.sejarah_text = sejarahText;
     if (sejarahImageUrl !== undefined) updateData.sejarah_image = sejarahImageUrl;
+    if (tentangKamiImage !== undefined) updateData.tentang_kami_image = tentangKamiImage;
     if (heroImage1 !== undefined) updateData.hero_image_1 = heroImage1;
     if (heroImage2 !== undefined) updateData.hero_image_2 = heroImage2;
     if (heroImage3 !== undefined) updateData.hero_image_3 = heroImage3;

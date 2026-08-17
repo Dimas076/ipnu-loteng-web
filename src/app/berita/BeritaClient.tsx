@@ -247,8 +247,7 @@ export function BeritaClient() {
                         <Link href={`/berita/${headline.slug}`} className="group block md:col-span-7">
                           <div className="relative w-full aspect-[21/9] rounded-lg overflow-hidden mb-4 bg-muted border border-border/50">
                             {headline.image ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img src={headline.image} alt={headline.title} className="w-full h-full object-cover " />
+                              <img src={headline.image} alt={headline.title} className="w-full h-full object-cover transition-transform duration-500" />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/15 to-primary/5">
                                 <ImageIcon className="h-12 w-12 text-muted-foreground/30" />
@@ -258,7 +257,7 @@ export function BeritaClient() {
                           <div className="mb-2">
                             <span className="bg-primary text-white px-2 py-1 text-xs font-bold uppercase tracking-wider">{headline.category || "Umum"}</span>
                           </div>
-                          <h2 className="text-2xl md:text-3xl font-bold text-foreground hover:text-primary transition-colors leading-tight mb-3">
+                          <h2 className="text-2xl md:text-3xl font-bold text-foreground hover:text-primary hover:underline transition-colors leading-tight mb-3">
                             {headline.title}
                           </h2>
                           <p className="text-sm md:text-base text-muted-foreground line-clamp-2 leading-relaxed mb-3">
@@ -284,7 +283,7 @@ export function BeritaClient() {
                               <div className="w-32 h-24 md:w-full md:h-auto md:aspect-[16/9] rounded-lg bg-muted shrink-0 overflow-hidden relative md:mb-3">
                                 {news.image ? (
                                   // eslint-disable-next-line @next/next/no-img-element
-                                  <img src={news.image} alt={news.title} className="w-full h-full object-cover " />
+                                  <img src={news.image} alt={news.title} className="w-full h-full object-cover transition-transform duration-500" />
                                 ) : (
                                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
                                     <ImageIcon className="h-6 w-6 md:h-8 md:w-8 text-muted-foreground/30" />
@@ -293,7 +292,7 @@ export function BeritaClient() {
                               </div>
                               <div className="flex-1">
                                 <span className="bg-primary text-white px-2 py-0.5 text-[10px] font-bold uppercase mb-2 inline-block">{news.category || "Umum"}</span>
-                                <h3 className="text-base md:text-lg font-bold text-foreground hover:text-primary transition-colors leading-snug line-clamp-3 md:line-clamp-2 mb-2">
+                                <h3 className="text-base md:text-lg font-bold text-foreground hover:text-primary hover:underline transition-colors leading-snug line-clamp-3 md:line-clamp-2 mb-2">
                                   {news.title}
                                 </h3>
                                 <div className="flex items-center gap-2 text-[11px] text-muted-foreground font-medium">
@@ -319,7 +318,7 @@ export function BeritaClient() {
                           <div className="flex flex-row justify-between gap-4 md:gap-8">
                             <div className="flex flex-col justify-center flex-1">
                               <span className="bg-primary text-white px-2 py-0.5 text-[10px] md:text-xs font-bold uppercase w-fit mb-2 md:mb-3">{news.category || "Umum"}</span>
-                              <h3 className="text-base md:text-xl font-bold text-foreground hover:text-primary transition-all duration-300 leading-snug mb-2 line-clamp-3 md:line-clamp-2">
+                              <h3 className="text-base md:text-xl font-bold text-foreground hover:text-primary hover:underline transition-all duration-300 leading-snug mb-2 line-clamp-3 md:line-clamp-2">
                                 {news.title}
                               </h3>
                               <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed hidden md:block mb-3">
@@ -338,7 +337,7 @@ export function BeritaClient() {
                             <div className="w-28 h-28 md:w-48 md:h-32 rounded-lg bg-muted shrink-0 overflow-hidden relative border border-border/50">
                               {news.image ? (
                                 // eslint-disable-next-line @next/next/no-img-element
-                                <img src={news.image} alt={news.title} className="w-full h-full object-cover " />
+                                <img src={news.image} alt={news.title} className="w-full h-full object-cover transition-transform duration-500" />
                               ) : (
                                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
                                   <ImageIcon className="h-8 w-8 text-muted-foreground/30" />
@@ -374,7 +373,7 @@ export function BeritaClient() {
                           <span className="text-[10px] font-bold text-primary uppercase tracking-wider mb-1 block">
                             {item.category || "Umum"}
                           </span>
-                          <h4 className="text-sm font-bold leading-snug hover:text-primary transition-colors line-clamp-2 text-foreground">
+                          <h4 className="text-sm font-bold leading-snug hover:text-primary hover:underline transition-colors line-clamp-2 text-foreground">
                             {item.title}
                           </h4>
                         </div>

@@ -14,7 +14,24 @@ export const revalidate = 60;
 
 export default async function PengurusPage() {
   const pengurusList = await prisma.pengurus.findMany({ orderBy: { order: 'asc' } });
-
+  
+  const pilars = [
+    {
+      id: 1,
+      title: "Bergerak Riang Gembira",
+      description: "Menjalankan roda organisasi dengan penuh semangat, keikhlasan, dan kegembiraan, guna menciptakan iklim pergerakan yang positif bagi seluruh kader."
+    },
+    {
+      id: 2,
+      title: "Rekonsiliasi, Harmoni, Solid dan Loyal",
+      description: "Menyatukan seluruh elemen pelajar NU dalam harmoni kebersamaan, membangun kesolidan, serta memupuk loyalitas tanpa batas kepada organisasi."
+    },
+    {
+      id: 3,
+      title: "Revitalisasi Organisasi Optimalisasi Kaderisasi",
+      description: "Menghidupkan kembali struktur kepengurusan hingga tingkat ranting dan mengoptimalkan sistem pengkaderan yang berkelanjutan dan terukur."
+    }
+  ];
   const ketua = pengurusList.filter(p => p.tier === 1);
   const wakilKetua = pengurusList.filter(p => p.tier === 2);
   const sekBen = pengurusList.filter(p => p.tier === 3);
@@ -142,6 +159,63 @@ export default async function PengurusPage() {
           )}
 
         </div>
+
+        {/* Visi Misi */}
+        <section className="mt-24 pt-16 border-t border-border">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-4">Visi & <span className="font-semibold text-primary">Misi</span></h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Tujuan dan langkah-langkah strategis Ikatan Pelajar Nahdlatul Ulama dalam mewujudkan generasi penerus yang berkualitas.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <div className="bg-white rounded-xl p-8 border border-border shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="text-2xl font-bold mb-4 text-foreground">Visi</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Terbentuknya pelajar bangsa yang bertaqwa kepada Allah SWT, berilmu, berakhlak mulia dan berwawasan kebangsaan serta bertanggungjawab atas tegak dan terlaksananya syari&apos;at Islam menurut faham Ahlussunnah wal Jama&apos;ah.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-xl p-8 border border-border shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="text-2xl font-bold mb-4 text-foreground">Misi</h3>
+              <ul className="text-muted-foreground leading-relaxed space-y-3 list-disc pl-5">
+                <li>Menghimpun dan membina pelajar Nahdlatul Ulama dalam satu wadah organisasi.</li>
+                <li>Mempersiapkan kader-kader intelektual sebagai penerus perjuangan bangsa.</li>
+                <li>Mengusahakan tercapainya tujuan organisasi dengan menyusun landasan program perjuangan sesuai dengan perkembangan masyarakat.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Arah Gerak */}
+        <section className="mt-24 pt-16 border-t border-border">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-4">Arah Gerak <span className="font-semibold">Organisasi</span></h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Tiga pilar utama yang menjadi landasan pergerakan Pimpinan Cabang IPNU Kabupaten Lombok Tengah Masa Khidmat 2026-2028.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-border rounded-lg overflow-hidden">
+            {pilars.length > 0 ? (
+              pilars.map((pilar, index) => (
+                <div key={pilar.id} className={`bg-white rounded-lg p-8 ${index !== pilars.length - 1 ? 'border-b md:border-b-0 md:border-r' : 'border-none'} border-border hover:bg-muted/30 transition-all duration-300 text-center group`}>
+                  <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-6 transition-transform duration-300 text-on-primary">
+                    <span className="text-2xl font-bold">{index + 1}</span>
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 text-foreground">{pilar.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    {pilar.description}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <div className="col-span-3 text-center py-12 text-muted-foreground">Belum ada pilar arah gerak.</div>
+            )}
+          </div>
+        </section>
+
       </div>
     </MainLayout>
   );

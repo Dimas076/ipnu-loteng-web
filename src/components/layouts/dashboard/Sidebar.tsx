@@ -33,7 +33,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
     { name: "Berita", href: "/dashboard/berita", icon: FileText },
     { name: "Agenda", href: "/dashboard/agenda", icon: Calendar },
     { name: "Galeri", href: "/dashboard/galeri", icon: ImageIcon },
-    { name: "Profil Organisasi", href: "/dashboard/profil", icon: Building },
+    { name: "Sejarah Organisasi", href: "/dashboard/profil", icon: Building },
     { name: "Pengurus", href: "/dashboard/pengurus", icon: Users },
     { name: "PAC", href: "/dashboard/pac", icon: Users },
     { name: "Pengaturan", href: "/dashboard/pengaturan", icon: Settings },
