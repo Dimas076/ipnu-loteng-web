@@ -1,11 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { Download, Printer } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { PrintButton } from './PrintButton';
-
-const prisma = new PrismaClient();
 
 export default async function CetakSertifikat({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
