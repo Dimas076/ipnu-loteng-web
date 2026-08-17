@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Download, Printer } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { PrintButton } from './PrintButton';
 
 const prisma = new PrismaClient();
 
@@ -113,6 +114,3 @@ export default async function CetakSertifikat({ params }: { params: Promise<{ id
     </div>
   );
 }
-
-// Extract the print button into a client component to allow onClick
-import { PrintButton } from './PrintButton';
